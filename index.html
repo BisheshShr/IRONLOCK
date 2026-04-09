@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IRONLOCK — Accountability</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --surface2: #1a1a1a;
+      --border: #2a2a2a;
+      --accent: #ff4444;
+      --accent2: #ff8800;
+      --text: #f0f0f0;
+      --muted: #777;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --blue: #3b82f6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; }
+
+    /* ---- LAYOUT ---- */
+    .app { max-width: 500px; margin: 0 auto; padding: 1.5rem 1rem 100px; }
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ---- LOGO ---- */
+    .logo { text-align: center; padding: 2.5rem 0 2rem; }
+    .logo h1 {
+      font-size: 2.5rem; font-weight: 800; letter-spacing: -1px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .logo p { color: var(--muted); font-size: 0.78rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 6px; }
+
+    /* ---- CARDS ---- */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; }
+    .card-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); margin-bottom: 1rem; }
+
+    /* ---- FORMS ---- */
+    .form-group { margin-bottom: 1.1rem; }
+    .form-group label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 6px; }
+    .form-group input, .form-group select {
+      width: 100%; background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 0.8rem 1rem; color: var(--text);
+      font-family: 'Syne', sans-serif; font-size: 0.95rem; transition: border-color 0.15s;
+    }
+    .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--accent); }
+    .form-group select option { background: #1a1a1a; }
+    .form-group input::placeholder { color: #444; }
+
+    /* ---- BUTTONS ---- */
+    .btn {
+      width: 100%; padding: 0.9rem 1.5rem; border-radius: 12px; border: none;
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem;
+      cursor: pointer; transition: all 0.15s; letter-spacing: 0.5px; display: block;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn + .btn { margin-top: 0.75rem; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: #e03333; }
+    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: #444; }
+    .btn-ghost { background: transparent; color: var(--muted); font-size: 0.85rem; }
+    .btn-ghost:hover { color: var(--text); }
+    .btn-green { background: var(--green); color: white; }
+    .btn-green:hover { background: #16a34a; }
+    .btn-sm { padding: 0.5rem 1rem; font-size: 0.8rem; width: auto; border-radius: 8px; display: inline-block; }
+    .btn-loading { opacity: 0.6; pointer-events: none; }
+
+    /* ---- TABS ---- */
+    .tabs { display: flex; gap: 4px; background: var(--surface); border-radius: 12px; padding: 4px; border: 1px solid var(--border); margin-bottom: 1.5rem; }
+    .tab { flex: 1; padding: 0.55rem; text-align: center; border-radius: 9px; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: var(--muted); transition: all 0.15s; border: none; background: transparent; font-family: 'Syne', sans-serif; }
+    .tab.active { background: var(--surface2); color: var(--text); }
+
+    /* ---- STREAK ---- */
+    .streak-hero { text-align: center; padding: 1.5rem 0; }
+    .streak-number { font-size: 5.5rem; font-weight: 800; line-height: 1; font-family: 'Space Mono', monospace; }
+    .streak-number.great { color: var(--green); }
+    .streak-number.ok { color: var(--yellow); }
+    .streak-number.low { color: var(--accent); }
+    .streak-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 3px; margin-top: 6px; }
+
+    /* ---- BIG RED BUTTON ---- */
+    .confess-wrap { display: flex; flex-direction: column; align-items: center; padding: 1rem 0 0.5rem; }
+    .confess-btn {
+      width: 150px; height: 150px; border-radius: 50%;
+      background: radial-gradient(circle at 38% 35%, #ff7070, #ff2222 55%, #aa0000);
+      border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 0.95rem; color: white; letter-spacing: 1px; text-transform: uppercase;
+      transition: all 0.2s; box-shadow: 0 0 50px rgba(255,34,34,0.25), inset 0 -5px 0 rgba(0,0,0,0.35);
+    }
+    .confess-btn:hover { transform: scale(1.06); box-shadow: 0 0 70px rgba(255,34,34,0.4), inset 0 -5px 0 rgba(0,0,0,0.35); }
+    .confess-btn:active { transform: scale(0.96); }
+    .confess-hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.75rem; text-align: center; }
+
+    /* ---- MODE CARDS ---- */
+    .mode-card { background: var(--surface); border: 2px solid var(--border); border-radius: 16px; padding: 1.25rem; cursor: pointer; transition: all 0.2s; margin-bottom: 0.75rem; }
+    .mode-card:hover { border-color: #3a3a3a; transform: translateY(-1px); }
+    .mode-card.selected { border-color: var(--accent); }
+    .mode-card h3 { font-size: 1rem; margin-bottom: 5px; }
+    .mode-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.4; }
+    .mode-icon { font-size: 1.8rem; margin-bottom: 8px; }
+
+    /* ---- BADGES ---- */
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .badge-red { background: rgba(255,68,68,0.15); color: var(--accent); }
+    .badge-green { background: rgba(34,197,94,0.15); color: var(--green); }
+    .badge-yellow { background: rgba(234,179,8,0.15); color: var(--yellow); }
+    .badge-blue { background: rgba(59,130,246,0.15); color: var(--blue); }
+
+    /* ---- LEADERBOARD ---- */
+    .lb-row { display: flex; align-items: center; gap: 12px; padding: 0.8rem 0; border-bottom: 1px solid var(--border); }
+    .lb-row:last-child { border-bottom: none; }
+    .lb-rank { font-family: 'Space Mono', monospace; font-size: 1.1rem; font-weight: 700; width: 36px; color: var(--muted); flex-shrink: 0; }
+    .lb-rank.gold { color: #ffd700; }
+    .lb-rank.silver { color: #c0c0c0; }
+    .lb-rank.bronze { color: #cd7f32; }
+    .lb-name { flex: 1; font-weight: 600; font-size: 0.9rem; }
+    .lb-days { font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--green); }
+    .lb-fail { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--accent); margin-left: 6px; }
+
+    /* ---- HISTORY ---- */
+    .hist-item { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0; border-bottom: 1px solid var(--border); }
+    .hist-item:last-child { border-bottom: none; }
+
+    /* ---- NAV ---- */
+    .nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); display: flex; z-index: 100; padding: 6px 0 10px; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 4px; cursor: pointer; color: var(--muted); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; transition: color 0.15s; border: none; background: transparent; font-family: 'Syne', sans-serif; }
+    .nav-item.active { color: var(--accent); }
+    .nav-icon { font-size: 1.25rem; line-height: 1; }
+
+    /* ---- MODALS ---- */
+    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 500; padding: 1rem; }
+    .modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; max-width: 360px; width: 100%; }
+    .modal-box h2 { font-size: 1.4rem; margin-bottom: 0.75rem; }
+
+    /* ---- PAYMENT ---- */
+    .pay-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.65rem; flex-shrink: 0; }
+    .pay-esewa { background: #60bb46; color: white; }
+    .pay-khalti { background: #5c2d91; color: white; }
+    .pay-paypal { background: #003087; color: white; }
+    .pay-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+
+    /* ---- NOTIFICATION ---- */
+    .notif { position: fixed; top: 1rem; left: 50%; transform: translateX(-50%) translateY(-120px); background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 0.9rem 1.4rem; font-size: 0.88rem; z-index: 1000; transition: transform 0.3s ease; max-width: 320px; text-align: center; white-space: pre-line; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+    .notif.show { transform: translateX(-50%) translateY(0); }
+    .notif.error { border-color: var(--accent); color: var(--accent); }
+    .notif.success { border-color: var(--green); color: var(--green); }
+
+    /* ---- LOADING ---- */
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; margin-right: 8px; vertical-align: middle; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 1rem; }
+    .loading-screen p { color: var(--muted); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; }
+
+    /* ---- INVITE CODE ---- */
+    .code-display { font-family: 'Space Mono', monospace; font-size: 2rem; font-weight: 700; letter-spacing: 8px; color: var(--accent2); text-align: center; padding: 1rem; background: var(--surface2); border-radius: 12px; border: 1px dashed var(--border); margin: 1rem 0; }
+
+    /* ---- MISC ---- */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+    .hidden { display: none !important; }
+    .text-center { text-align: center; }
+    .text-muted { color: var(--muted); font-size: 0.82rem; }
+    .mt-1 { margin-top: 0.5rem; }
+    .mt-2 { margin-top: 1rem; }
+    .flex { display: flex; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
+    .gap { gap: 0.75rem; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+    /* ---- STAT MINI ---- */
+    .stat-mini { background: var(--surface2); border-radius: 12px; padding: 1rem; text-align: center; }
+    .stat-mini .val { font-size: 1.8rem; font-weight: 800; font-family: 'Space Mono', monospace; }
+    .stat-mini .lbl { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- NOTIFICATION TOAST -->
+<div id="notif" class="notif"></div>
+
+<!-- ============================================================ -->
+<!-- LOADING -->
+<!-- ============================================================ -->
+<div id="screen-loading" class="screen active">
+  <div class="loading-screen">
+    <div style="font-size:2.5rem; font-weight:800; background:linear-gradient(135deg,#ff4444,#ff8800);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">IRONLOCK</div>
+    <div style="display:flex;align-items:center;gap:8px;color:var(--muted);font-size:0.8rem">
+      <div class="spinner" style="border-top-color:var(--muted)"></div>
+      Loading...
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- REGISTER -->
+<!-- ============================================================ -->
+<div id="screen-register" class="screen">
+  <div class="app">
+    <div class="logo"><h1>IRONLOCK</h1><p>Accountability · Discipline · Trust</p></div>
+
+    <div class="card">
+      <div class="card-title">Create your account</div>
+      <div class="form-group">
+        <label>Display Name</label>
+        <input type="text" id="reg-name" placeholder="Your name" autocomplete="name" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="reg-pass" placeholder="Min 6 characters" autocomplete="new-password" />
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💳 Payment method — required for accountability</div>
+      <div class="form-group">
+        <label>Choose payment method</label>
+        <select id="reg-pay-method" onchange="onPayChange()">
+          <option value="">— Select one —</option>
+          <option value="esewa">eSewa (Nepal) 🇳🇵</option>
+          <option value="khalti">Khalti (Nepal) 🇳🇵</option>
+          <option value="paypal">PayPal 🌍</option>
+        </select>
+      </div>
+      <div id="pay-detail-esewa" class="hidden">
+        <div class="pay-row"><div class="pay-icon pay-esewa">eS</div><span style="font-weight:600">eSewa</span></div>
+        <div class="form-group"><label>eSewa Phone Number</label><input type="tel" id="reg-esewa" placeholder="98XXXXXXXX" /></div>
+      </div>
+      <div id="pay-detail-khalti" class="hidden">
+        <div class="pay-row"><div class="pay-icon pay-khalti">Kh</div><span style="font-weight:600">Khalti</span></div>
+        <div class="form-group"><label>Khalti Phone Number</label><input type="tel" id="reg-khalti" placeholder="98XXXXXXXX" /></div>
+      </div>
+      <div id="pay-detail-paypal" class="hidden">
+        <div class="pay-row"><div class="pay-icon pay-paypal">PP</div><span style="font-weight:600">PayPal</span></div>
+        <div class="form-group"><label>PayPal Email</label><input type="email" id="reg-paypal" placeholder="paypal@email.com" /></div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="btn-register" onclick="doRegister()">Create Account →</button>
+    <button class="btn btn-ghost" onclick="showScreen('screen-login')">Already have an account? Sign in</button>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- LOGIN -->
+<!-- ============================================================ -->
+<div id="screen-login" class="screen">
+  <div class="app">
+    <div class="logo"><h1>IRONLOCK</h1><p>Welcome back</p></div>
+    <div class="card">
+      <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com" autocomplete="email" /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="login-pass" placeholder="Password" autocomplete="current-password" /></div>
+    </div>
+    <button class="btn btn-primary" id="btn-login" onclick="doLogin()">Sign In →</button>
+    <button class="btn btn-ghost" onclick="showScreen('screen-register')">Create new account</button>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- STREAK INIT MODAL -->
+<!-- ============================================================ -->
+<div id="modal-streak" class="modal-bg hidden">
+  <div class="modal-box">
+    <div style="font-size:2.5rem; text-align:center; margin-bottom:0.75rem">🔥</div>
+    <h2 style="text-align:center">Start your streak</h2>
+    <p style="color:var(--muted); font-size:0.88rem; line-height:1.55; margin:0.75rem 0 1.5rem; text-align:center">
+      Should I start counting your streak from right now,<br>or do you want to enter how many days you've already been clean?
+    </p>
+    <button class="btn btn-primary" onclick="streakFromNow()" style="margin-bottom:0.75rem">🚀 Start from today (Day 0)</button>
+    <div style="display:flex; gap:0.75rem; align-items:center">
+      <input type="number" id="streak-existing" min="0" placeholder="Days already clean"
+        style="flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:0.8rem 1rem; color:var(--text); font-family:'Syne',sans-serif; font-size:0.9rem;" />
+      <button class="btn btn-secondary btn-sm" onclick="streakFromDays()">Use this →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- MAIN APP -->
+<!-- ============================================================ -->
+<div id="screen-main" class="screen">
+
+  <!-- HOME TAB -->
+  <div id="tab-home" class="app">
+    <div class="flex-between" style="margin-bottom:1.5rem">
+      <div>
+        <div style="font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:2px">Welcome back</div>
+        <div style="font-size:1.3rem; font-weight:700" id="home-name">—</div>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="doLogout()">Sign out</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Current streak</div>
+      <div class="streak-hero">
+        <div id="streak-num" class="streak-number low">0</div>
+        <div class="streak-label">days clean</div>
+      </div>
+      <div id="mode-indicator" style="text-align:center; margin-bottom:1.2rem"></div>
+      <div class="confess-wrap">
+        <button class="confess-btn" onclick="openRelapseModal()">
+          I<br>RELAPSED
+        </button>
+        <p class="confess-hint">Tap only if you've relapsed.<br>This runs on your honor.</p>
+      </div>
+    </div>
+
+    <!-- Debt card (shown when owed) -->
+    <div class="card hidden" id="home-debt-card">
+      <div class="card-title">💸 Outstanding debt</div>
+      <div id="home-debt-amount" style="font-size:2rem; font-weight:800; font-family:'Space Mono',monospace; color:var(--accent)"></div>
+      <div id="home-debt-sub" class="text-muted mt-1"></div>
+      <button class="btn btn-green mt-2" onclick="openPayModal()">Pay now →</button>
+    </div>
+
+    <!-- Battle snapshot (shown when in competition) -->
+    <div class="card hidden" id="home-battle-card">
+      <div class="card-title">⚔️ Battle snapshot</div>
+      <div id="home-battle-content"></div>
+    </div>
+  </div>
+
+  <!-- COMPETE TAB -->
+  <div id="tab-compete" class="app hidden">
+    <div style="margin-bottom:1.5rem">
+      <div style="font-size:1.5rem; font-weight:800">Compete</div>
+      <div class="text-muted">Challenge friends. Stay accountable.</div>
+    </div>
+
+    <!-- No active challenge -->
+    <div id="compete-setup">
+      <div class="mode-card" id="mc-solo" onclick="pickMode('solo')">
+        <div class="mode-icon">💰</div>
+        <h3>Solo Pledge</h3>
+        <p>You relapse → you send agreed money to the app owner. Pure self-accountability.</p>
+      </div>
+      <div class="mode-card" id="mc-battle" onclick="pickMode('battle')">
+        <div class="mode-icon">⚔️</div>
+        <h3>Friend Battle</h3>
+        <p>1v1 with a friend. Each relapse costs you money — paid to them. They get notified on every slip.</p>
+      </div>
+
+      <div id="form-solo" class="hidden">
+        <div class="card">
+          <div class="card-title">Solo pledge details</div>
+          <div class="form-group"><label>Penalty per relapse</label><input type="number" id="solo-penalty" placeholder="e.g. 500" min="1" /></div>
+          <div class="form-group">
+            <label>Currency</label>
+            <select id="solo-currency">
+              <option value="NPR">NPR — Nepalese Rupee</option>
+              <option value="USD">USD — US Dollar</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="startSolo()">Activate Solo Pledge</button>
+        </div>
+      </div>
+
+      <div id="form-battle" class="hidden">
+        <div class="card">
+          <div class="card-title">Create a battle</div>
+          <div class="form-group"><label>Penalty per relapse</label><input type="number" id="battle-penalty" placeholder="e.g. 500" min="1" /></div>
+          <div class="form-group">
+            <label>Currency</label>
+            <select id="battle-currency">
+              <option value="NPR">NPR — Nepalese Rupee</option>
+              <option value="USD">USD — US Dollar</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="createBattle()">Generate invite code</button>
+          <div class="divider"></div>
+          <div class="card-title">Or join an existing battle</div>
+          <div class="form-group">
+            <label>Enter invite code</label>
+            <input type="text" id="join-code" placeholder="ABC123" maxlength="6"
+              style="text-transform:uppercase; letter-spacing:6px; text-align:center; font-size:1.3rem; font-family:'Space Mono',monospace" />
+          </div>
+          <button class="btn btn-secondary" onclick="joinBattle()">Join battle →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active challenge view -->
+    <div id="compete-active" class="hidden">
+      <div class="card" id="active-battle-card">
+        <div class="card-title">Active battle</div>
+        <div id="active-battle-body"></div>
+      </div>
+      <button class="btn btn-secondary" onclick="leaveBattle()">Leave battle</button>
+    </div>
+  </div>
+
+  <!-- HISTORY TAB -->
+  <div id="tab-history" class="app hidden">
+    <div style="margin-bottom:1.5rem">
+      <div style="font-size:1.5rem; font-weight:800">History</div>
+      <div class="text-muted">Your full relapse log</div>
+    </div>
+    <div id="history-content"></div>
+  </div>
+
+  <!-- LEADERBOARD TAB -->
+  <div id="tab-leaderboard" class="app hidden">
+    <div style="margin-bottom:1.5rem">
+      <div style="font-size:1.5rem; font-weight:800">Leaderboard</div>
+      <div class="text-muted">All active battles, ranked by streak</div>
+    </div>
+    <div class="card" id="lb-content"><div class="text-muted text-center">No active battles yet.</div></div>
+  </div>
+
+  <!-- PROFILE TAB -->
+  <div id="tab-profile" class="app hidden">
+    <div style="margin-bottom:1.5rem">
+      <div style="font-size:1.5rem; font-weight:800">Profile</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Account</div>
+      <div id="profile-account"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Payment</div>
+      <div id="profile-payment"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">All-time stats</div>
+      <div id="profile-stats"></div>
+    </div>
+    <button class="btn btn-secondary mt-2" onclick="doLogout()">Sign out</button>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="nav">
+    <button class="nav-item active" id="nav-home" onclick="goTab('home')"><span class="nav-icon">🔥</span>Home</button>
+    <button class="nav-item" id="nav-compete" onclick="goTab('compete')"><span class="nav-icon">⚔️</span>Compete</button>
+    <button class="nav-item" id="nav-history" onclick="goTab('history')"><span class="nav-icon">📋</span>History</button>
+    <button class="nav-item" id="nav-leaderboard" onclick="goTab('leaderboard')"><span class="nav-icon">🏆</span>Ranks</button>
+    <button class="nav-item" id="nav-profile" onclick="goTab('profile')"><span class="nav-icon">👤</span>Profile</button>
+  </nav>
+</div>
+
+<!-- ============================================================ -->
+<!-- RELAPSE CONFIRM MODAL -->
+<!-- ============================================================ -->
+<div id="modal-relapse" class="modal-bg hidden">
+  <div class="modal-box text-center">
+    <div style="font-size:3rem; margin-bottom:1rem">😔</div>
+    <h2>Be honest</h2>
+    <p style="color:var(--muted); font-size:0.88rem; line-height:1.6; margin:0.75rem 0 1.5rem">This app runs entirely on personal integrity. Only confirm if you genuinely relapsed.</p>
+    <button class="btn btn-primary" onclick="doRelapse()" style="margin-bottom:0.75rem">Yes, I relapsed</button>
+    <button class="btn btn-ghost" onclick="closeModal('modal-relapse')">No, I'm still clean</button>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- INVITE CODE MODAL -->
+<!-- ============================================================ -->
+<div id="modal-invite" class="modal-bg hidden">
+  <div class="modal-box text-center">
+    <h2>Challenge created! 🎉</h2>
+    <p style="color:var(--muted); font-size:0.88rem; margin-top:0.5rem">Share this code with your opponent:</p>
+    <div class="code-display" id="invite-code-val">------</div>
+    <p class="text-muted">The battle begins as soon as they join.</p>
+    <button class="btn btn-primary mt-2" onclick="closeInviteModal()">Done</button>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAY MODAL -->
+<!-- ============================================================ -->
+<div id="modal-pay" class="modal-bg hidden">
+  <div class="modal-box">
+    <h2>💸 Pay your penalty</h2>
+    <p id="pay-modal-info" style="color:var(--muted); font-size:0.85rem; margin:0.75rem 0 1.25rem; line-height:1.5"></p>
+    <div id="pay-modal-body"></div>
+    <button class="btn btn-ghost mt-2" onclick="closeModal('modal-pay')">Cancel</button>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- JS -->
+<!-- ============================================================ -->
+<script type="module">
+  // ===================== FIREBASE CONFIG =====================
+  const DB_URL = "https://accountability-21545-default-rtdb.asia-southeast1.firebasedatabase.app";
+
+  async function fbGet(path) {
+    const r = await fetch(`${DB_URL}/${path}.json`);
+    if (!r.ok) throw new Error(`DB read error ${r.status}`);
+    return r.json();
+  }
+  async function fbSet(path, data) {
+    const r = await fetch(`${DB_URL}/${path}.json`, {
+      method: "PUT", headers: {"Content-Type":"application/json"}, body: JSON.stringify(data)
+    });
+    if (!r.ok) throw new Error(`DB write error ${r.status}`);
+    return r.json();
+  }
+  async function fbPatch(path, data) {
+    const r = await fetch(`${DB_URL}/${path}.json`, {
+      method: "PATCH", headers: {"Content-Type":"application/json"}, body: JSON.stringify(data)
+    });
+    if (!r.ok) throw new Error(`DB patch error ${r.status}`);
+    return r.json();
+  }
+  async function fbPost(path, data) {
+    const r = await fetch(`${DB_URL}/${path}.json`, {
+      method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(data)
+    });
+    if (!r.ok) throw new Error(`DB post error ${r.status}`);
+    return r.json();
+  }
+  async function fbDel(path) {
+    await fetch(`${DB_URL}/${path}.json`, { method: "DELETE" });
+  }
+
+  // email → safe firebase key
+  function eKey(email) {
+    return email.toLowerCase().replace(/\./g,"_dot_").replace(/@/g,"_at_");
+  }
+
+  // ===================== STATE =====================
+  let currentUser = null;    // full user object from DB
+  let currentEmail = null;   // raw email string
+  let notifTimer = null;
+
+  // ===================== UTILS =====================
+  window.showScreen = function(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  };
+
+  function openModal(id)  { document.getElementById(id).classList.remove('hidden'); }
+  window.closeModal = function(id) { document.getElementById(id).classList.add('hidden'); };
+
+  function notify(msg, type = '') {
+    const el = document.getElementById('notif');
+    el.className = 'notif' + (type ? ' ' + type : '');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(notifTimer);
+    notifTimer = setTimeout(() => el.classList.remove('show'), 4000);
+  }
+
+  function setLoading(btnId, loading, label) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.classList.toggle('btn-loading', loading);
+    btn.innerHTML = loading ? `<span class="spinner"></span>${label}` : label;
+  }
+
+  function daysSince(ts) {
+    if (!ts) return 0;
+    return Math.floor((Date.now() - ts) / 86400000);
+  }
+
+  function fmtDate(ts) {
+    return new Date(ts).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+  }
+
+  function generateCode() {
+    const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    return Array.from({length:6}, () => c[Math.floor(Math.random()*c.length)]).join('');
+  }
+
+  // ===================== PAYMENT FORM TOGGLE =====================
+  window.onPayChange = function() {
+    const v = document.getElementById('reg-pay-method').value;
+    ['esewa','khalti','paypal'].forEach(m =>
+      document.getElementById('pay-detail-' + m).classList.toggle('hidden', v !== m)
+    );
+  };
+
+  // ===================== REGISTER =====================
+  window.doRegister = async function() {
+    const name = document.getElementById('reg-name').value.trim();
+    const email = document.getElementById('reg-email').value.trim().toLowerCase();
+    const pass = document.getElementById('reg-pass').value;
+    const payMethod = document.getElementById('reg-pay-method').value;
+
+    if (!name)       return notify('Please enter your name', 'error');
+    if (!email || !email.includes('@')) return notify('Please enter a valid email', 'error');
+    if (pass.length < 6) return notify('Password must be at least 6 characters', 'error');
+    if (!payMethod)  return notify('Please select a payment method — it is required', 'error');
+
+    let payId = '';
+    if (payMethod === 'esewa')  payId = document.getElementById('reg-esewa').value.trim();
+    if (payMethod === 'khalti') payId = document.getElementById('reg-khalti').value.trim();
+    if (payMethod === 'paypal') payId = document.getElementById('reg-paypal').value.trim();
+    if (!payId) return notify('Please enter your ' + payMethod + ' ID / number', 'error');
+
+    setLoading('btn-register', true, 'Creating account...');
+    try {
+      // Check if email already registered
+      const existing = await fbGet(`users/${eKey(email)}`);
+      if (existing) {
+        setLoading('btn-register', false, 'Create Account →');
+        return notify('Email already registered. Sign in instead.', 'error');
+      }
+
+      const user = {
+        name, email,
+        passHash: btoa(pass),
+        payMethod, payId,
+        streakStart: null,
+        totalRelapses: 0,
+        relapseLog: [],
+        mode: null,
+        challengeId: null,
+        penalty: 0,
+        currency: 'NPR',
+        totalDebt: 0,
+        paidDebt: 0,
+        createdAt: Date.now()
+      };
+
+      await fbSet(`users/${eKey(email)}`, user);
+
+      // Save session
+      localStorage.setItem('il_session', email);
+      currentEmail = email;
+      currentUser = user;
+
+      setLoading('btn-register', false, 'Create Account →');
+      showScreen('screen-main');
+      openModal('modal-streak');
+    } catch(e) {
+      setLoading('btn-register', false, 'Create Account →');
+      notify('Error: ' + e.message, 'error');
+    }
+  };
+
+  // ===================== LOGIN =====================
+  window.doLogin = async function() {
+    const email = document.getElementById('login-email').value.trim().toLowerCase();
+    const pass  = document.getElementById('login-pass').value;
+
+    if (!email || !email.includes('@')) return notify('Enter a valid email', 'error');
+    if (!pass) return notify('Enter your password', 'error');
+
+    setLoading('btn-login', true, 'Signing in...');
+    try {
+      const user = await fbGet(`users/${eKey(email)}`);
+      if (!user) {
+        setLoading('btn-login', false, 'Sign In →');
+        return notify('No account found with that email.', 'error');
+      }
+      if (user.passHash !== btoa(pass)) {
+        setLoading('btn-login', false, 'Sign In →');
+        return notify('Wrong password.', 'error');
+      }
+
+      localStorage.setItem('il_session', email);
+      currentEmail = email;
+      currentUser = user;
+      setLoading('btn-login', false, 'Sign In →');
+
+      if (!user.streakStart) {
+        showScreen('screen-main');
+        openModal('modal-streak');
+      } else {
+        loadMainApp();
+      }
+    } catch(e) {
+      setLoading('btn-login', false, 'Sign In →');
+      notify('Error: ' + e.message, 'error');
+    }
+  };
+
+  window.doLogout = function() {
+    localStorage.removeItem('il_session');
+    currentUser = null; currentEmail = null;
+    showScreen('screen-login');
+  };
+
+  // ===================== STREAK INIT =====================
+  window.streakFromNow = async function() {
+    await fbPatch(`users/${eKey(currentEmail)}`, { streakStart: Date.now() });
+    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
+    closeModal('modal-streak');
+    loadMainApp();
+  };
+
+  window.streakFromDays = async function() {
+    const days = parseInt(document.getElementById('streak-existing').value);
+    if (isNaN(days) || days < 0) return notify('Enter a valid number', 'error');
+    const ts = Date.now() - days * 86400000;
+    await fbPatch(`users/${eKey(currentEmail)}`, { streakStart: ts });
+    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
+    closeModal('modal-streak');
+    loadMainApp();
+  };
+
+  // ===================== MAIN APP =====================
+  function loadMainApp() {
+    showScreen('screen-main');
+    renderHome();
+    checkNotifications();
+  }
+
+  async function refreshUser() {
+    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
+  }
+
+  async function checkNotifications() {
+    await refreshUser();
+    const notifs = currentUser.notifications || [];
+    if (notifs.length > 0) {
+      const latest = notifs[notifs.length - 1];
+      notify('🔔 ' + latest.msg);
+      await fbPatch(`users/${eKey(currentEmail)}`, { notifications: [] });
+    }
+  }
+
+  // ---- HOME ----
+  function renderHome() {
+    const days = daysSince(currentUser.streakStart);
+    const el = document.getElementById('streak-num');
+    el.textContent = days;
+    el.className = 'streak-number ' + (days >= 30 ? 'great' : days >= 7 ? 'ok' : 'low');
+
+    document.getElementById('home-name').textContent = currentUser.name;
+
+    // Mode indicator
+    const mi = document.getElementById('mode-indicator');
+    if (currentUser.mode === 'solo') {
+      mi.innerHTML = `<span class="badge badge-yellow">Solo Pledge — ${currentUser.penalty} ${currentUser.currency}/relapse</span>`;
+    } else if (currentUser.mode === 'battle' && currentUser.challengeId) {
+      mi.innerHTML = `<span class="badge badge-red">⚔️ In battle · Code: ${currentUser.challengeId}</span>`;
+    } else {
+      mi.innerHTML = `<span class="badge badge-blue">No mode — set one in Compete tab</span>`;
+    }
+
+    // Debt
+    const debt = (currentUser.totalDebt || 0) - (currentUser.paidDebt || 0);
+    const dc = document.getElementById('home-debt-card');
+    if (debt > 0) {
+      dc.classList.remove('hidden');
+      document.getElementById('home-debt-amount').textContent = `${debt} ${currentUser.currency}`;
+      document.getElementById('home-debt-sub').textContent = `From ${currentUser.totalRelapses} relapse(s). Pay via your linked ${currentUser.payMethod}.`;
+    } else {
+      dc.classList.add('hidden');
+    }
+
+    // Battle card
+    renderHomeBattleCard();
+  }
+
+  async function renderHomeBattleCard() {
+    const bc = document.getElementById('home-battle-card');
+    if (!currentUser.challengeId) { bc.classList.add('hidden'); return; }
+
+    const ch = await fbGet(`challenges/${currentUser.challengeId}`);
+    if (!ch) { bc.classList.add('hidden'); return; }
+    bc.classList.remove('hidden');
+
+    const me = ch.players ? ch.players[eKey(currentEmail)] : null;
+    const allPlayers = ch.players ? Object.values(ch.players) : [];
+    const opp = allPlayers.find(p => p.email !== currentEmail);
+
+    const myDays = me ? daysSince(me.streakStart) : 0;
+    const oppDays = opp ? daysSince(opp.streakStart) : 0;
+    const myRel = me ? (me.relapses || 0) : 0;
+    const oppRel = opp ? (opp.relapses || 0) : 0;
+    const myDebt = myRel * ch.penalty;
+
+    document.getElementById('home-battle-body').innerHTML = `
+      <div class="grid2" style="margin-bottom:0.75rem">
+        <div class="stat-mini">
+          <div class="lbl">You</div>
+          <div class="val" style="color:var(--green)">${myDays}</div>
+          <div class="lbl">${myRel} relapses · ${myDebt} ${ch.currency} debt</div>
+        </div>
+        <div class="stat-mini">
+          <div class="lbl">${opp ? opp.name : 'Waiting...'}</div>
+          <div class="val" style="color:${opp && oppDays < myDays ? 'var(--accent)' : 'var(--green)'}">${oppDays}</div>
+          <div class="lbl">${opp ? oppRel + ' relapses' : 'Share code: ' + ch.id}</div>
+        </div>
+      </div>
+      ${myDebt > 0 ? `<div style="font-size:0.85rem; color:var(--accent); text-align:center">You owe ${opp ? opp.name : 'opponent'}: <strong>${myDebt} ${ch.currency}</strong></div>` : `<div style="font-size:0.85rem; color:var(--green); text-align:center">No debt ✅</div>`}
+    `;
+  }
+
+  // ---- TAB ROUTING ----
+  window.goTab = function(tab) {
+    const tabs = ['home','compete','history','leaderboard','profile'];
+    tabs.forEach(t => {
+      document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab);
+      document.getElementById('nav-' + t).classList.toggle('active', t === tab);
+    });
+    if (tab === 'compete')     renderCompete();
+    if (tab === 'history')     renderHistory();
+    if (tab === 'leaderboard') renderLeaderboard();
+    if (tab === 'profile')     renderProfile();
+  };
+
+  // ---- RELAPSE ----
+  window.openRelapseModal = () => openModal('modal-relapse');
+
+  window.doRelapse = async function() {
+    closeModal('modal-relapse');
+    await refreshUser();
+
+    const now = Date.now();
+    const streakBroken = daysSince(currentUser.streakStart);
+    const log = currentUser.relapseLog || [];
+    log.push({ time: now, streakBroken });
+
+    const updates = {
+      streakStart: now,
+      totalRelapses: (currentUser.totalRelapses || 0) + 1,
+      relapseLog: log
+    };
+
+    // Solo penalty
+    if (currentUser.mode === 'solo') {
+      updates.totalDebt = (currentUser.totalDebt || 0) + currentUser.penalty;
+    }
+
+    // Battle penalty + notify opponent
+    if (currentUser.mode === 'battle' && currentUser.challengeId) {
+      const ch = await fbGet(`challenges/${currentUser.challengeId}`);
+      if (ch && ch.players) {
+        // Update my player record in challenge
+        await fbPatch(`challenges/${currentUser.challengeId}/players/${eKey(currentEmail)}`, {
+          relapses: (ch.players[eKey(currentEmail)]?.relapses || 0) + 1,
+          streakStart: now
+        });
+        updates.totalDebt = (currentUser.totalDebt || 0) + ch.penalty;
+        updates.currency = ch.currency;
+
+        // Notify each opponent
+        for (const [key, p] of Object.entries(ch.players)) {
+          if (p.email !== currentEmail) {
+            const oppNotifs = (await fbGet(`users/${eKey(p.email)}/notifications`)) || [];
+            oppNotifs.push({
+              msg: `${currentUser.name} just relapsed! They owe you ${ch.penalty} ${ch.currency}.`,
+              time: now
+            });
+            await fbPatch(`users/${eKey(p.email)}`, { notifications: oppNotifs });
+          }
+        }
+      }
+    }
+
+    await fbPatch(`users/${eKey(currentEmail)}`, updates);
+    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
+    renderHome();
+    notify(`Relapse logged. Streak reset. Keep going! 💪\nStreak was at ${streakBroken} days.`);
+  };
+
+  // ---- COMPETE ----
+  window.pickMode = function(mode) {
+    document.getElementById('mc-solo').classList.toggle('selected', mode === 'solo');
+    document.getElementById('mc-battle').classList.toggle('selected', mode === 'battle');
+    document.getElementById('form-solo').classList.toggle('hidden', mode !== 'solo');
+    document.getElementById('form-battle').classList.toggle('hidden', mode !== 'battle');
+  };
+
+  window.startSolo = async function() {
+    const penalty = parseFloat(document.getElementById('solo-penalty').value);
+    const currency = document.getElementById('solo-currency').value;
+    if (!penalty || penalty <= 0) return notify('Enter a valid penalty amount', 'error');
+    await fbPatch(`users/${eKey(currentEmail)}`, { mode: 'solo', penalty, currency });
+    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
+    notify(`Solo pledge active! Each relapse = ${penalty} ${currency}`, 'success');
+    renderHome();
+    goTab('home');
+  };
+
+  window.createBattle = async function() {
+    const penalty = parseFloat(document.getElementById('battle-penalty').value);
+    const currency = document.getElementById('battle-currency').value;
+    if (!penalty || penalty <= 0) return notify('Enter a valid penalty amount', 'error');
+
+    await refreshUser();
+    const code = generateCode();
+    const challenge = {
+      id: code,
+      penalty,
+      currency,
+      createdAt: Date.now(),
+      players: {
+        [eKey(currentEmail)]: {
+          email: currentEmail,
+          name: currentUser.name,
+          streakStart: currentUser.streakStart || Date.now(),
+          relapses: 0
+        }
+      }
+    };
+
+    await fbSet(`challenges/${code}`, challenge);
+    await fbPatch(`users/${eKey(currentEmail)}`, { mode: 'battle', challengeId: code, penalty, currency });
+    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
+
+    document.getElementById('invite-code-val').textContent = code;
+    openModal('modal-invite');
+    renderCompete();
+  };
+
+  window.joinBattle = async function() {
+    const code = document.getElementById('join-code').value.trim().toUpperCase();
+    if (code.length !== 6) return notify('Enter a valid 6-character code', 'error');
+
+    await refreshUser();
+    const ch = await fbGet(`challenges/${code}`);
+    if (!ch) return notify('No battle found with that code', 'error');
+    if (ch.players && ch.players[eKey(currentEmail)]) return notify("You're already in this battle", 'error');
+    if (ch.players && Object.keys(ch.players).length >= 2) return notify('Battle is already full (2 players max)', 'error');
+
+    await fbPatch(`challenges/${code}/players`, {
+      [eKey(currentEmail)]: {
+        email: currentEmail,
+        name: currentUser.name,
+        streakStart: currentUser.streakStart || Date.now(),
+        relapses: 0
+      }
+    });
+
+    await fbPatch(`users/${eKey(currentEmail)}`, {
+      mode: 'battle', challengeId: code,
+      penalty: ch.penalty, currency: ch.currency
+    });
+    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
+
+    notify('Joined! Battle is on ⚔️', 'success');
+    renderCompete();
+    goTab('home');
+    renderHome();
+  };
+
+  async function renderCompete() {
+    await refreshUser();
+    const hasChallenge = currentUser.mode === 'battle' && currentUser.challengeId;
+    document.getElementById('compete-setup').classList.toggle('hidden', hasChallenge);
+    document.getElementById('compete-active').classList.toggle('hidden', !hasChallenge);
+
+    if (hasChallenge) {
+      const ch = await fbGet(`challenges/${currentUser.challengeId}`);
+      if (!ch) return;
+      const allP = ch.players ? Object.values(ch.players) : [];
+      const me = allP.find(p => p.email === currentEmail);
+      const opp = allP.find(p => p.email !== currentEmail);
+      const myDays = me ? daysSince(me.streakStart) : 0;
+      const oppDays = opp ? daysSince(opp.streakStart) : 0;
+      const myRel = me ? (me.relapses || 0) : 0;
+      const oppRel = opp ? (opp.relapses || 0) : 0;
+
+      document.getElementById('active-battle-body').innerHTML = `
+        <div style="font-size:0.75rem; color:var(--muted); margin-bottom:1rem">
+          Code: <span style="font-family:'Space Mono',monospace; color:var(--accent2)">${ch.id}</span> &nbsp;·&nbsp;
+          ${ch.penalty} ${ch.currency}/relapse
+        </div>
+        <div class="grid2" style="margin-bottom:1rem">
+          <div class="stat-mini">
+            <div class="lbl">You</div>
+            <div class="val" style="color:var(--green)">${myDays}</div>
+            <div class="lbl">days</div>
+            <div style="margin-top:6px; font-size:0.75rem; color:var(--accent)">${myRel} relapse(s)</div>
+            <div style="font-size:0.75rem; color:var(--muted)">Debt: ${myRel * ch.penalty} ${ch.currency}</div>
+          </div>
+          <div class="stat-mini">
+            <div class="lbl">${opp ? opp.name : 'Waiting...'}</div>
+            <div class="val" style="color:${opp && oppDays < myDays ? 'var(--accent)':'var(--green)'}">${oppDays}</div>
+            <div class="lbl">days</div>
+            ${opp ? `<div style="margin-top:6px; font-size:0.75rem; color:var(--accent)">${oppRel} relapse(s)</div>
+            <div style="font-size:0.75rem; color:var(--muted)">Debt: ${oppRel * ch.penalty} ${ch.currency}</div>` :
+            `<div style="font-size:0.75rem; color:var(--muted); margin-top:6px">Share code above</div>`}
+          </div>
+        </div>
+        ${!opp ? `<div style="background:var(--surface2); border-radius:12px; padding:1rem; text-align:center">
+          <div style="font-size:0.7rem; color:var(--muted); margin-bottom:4px">Invite code</div>
+          <div class="code-display" style="font-size:1.5rem; letter-spacing:6px">${ch.id}</div>
+        </div>` : ''}
+      `;
+    }
+  }
+
+  window.leaveBattle = async function() {
+    if (!confirm('Leave this battle? Your debt record stays.')) return;
+    await refreshUser();
+    if (currentUser.challengeId) {
+      await fbDel(`challenges/${currentUser.challengeId}/players/${eKey(currentEmail)}`);
+    }
+    await fbPatch(`users/${eKey(currentEmail)}`, { mode: null, challengeId: null });
+    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
+    renderCompete();
+    renderHome();
+    notify('Left the battle.');
+  };
+
+  window.closeInviteModal = function() {
+    closeModal('modal-invite');
+    goTab('home');
+    renderHome();
+  };
+
+  // ---- HISTORY ----
+  async function renderHistory() {
+    await refreshUser();
+    const log = (currentUser.relapseLog || []).slice().reverse();
+    const container = document.getElementById('history-content');
+    if (!log.length) {
+      container.innerHTML = '<div class="card text-center text-muted" style="padding:2rem">No relapses logged. Keep going! 💪</div>';
+      return;
+    }
+    container.innerHTML = `<div class="card">${log.map(r => `
+      <div class="hist-item">
+        <div>
+          <div style="font-weight:600; font-size:0.9rem">${fmtDate(r.time)}</div>
+          <div class="text-muted">${new Date(r.time).toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="text-muted">Streak broken at</div>
+          <div style="font-family:'Space Mono',monospace; color:var(--accent); font-size:0.95rem">${r.streakBroken} days</div>
+        </div>
+      </div>
+    `).join('')}</div>
+    <div style="text-align:center; padding-top:0.5rem" class="text-muted">${log.length} total relapse(s)</div>`;
+  }
+
+  // ---- LEADERBOARD ----
+  async function renderLeaderboard() {
+    const challenges = await fbGet('challenges');
+    const lb = document.getElementById('lb-content');
+    if (!challenges) { lb.innerHTML = '<div class="text-muted text-center">No active battles yet.</div>'; return; }
+
+    const rows = [];
+    for (const ch of Object.values(challenges)) {
+      if (!ch.players) continue;
+      for (const p of Object.values(ch.players)) {
+        rows.push({
+          name: p.name,
+          days: daysSince(p.streakStart),
+          relapses: p.relapses || 0,
+          currency: ch.currency,
+          penalty: ch.penalty
+        });
+      }
+    }
+    rows.sort((a, b) => b.days - a.days);
+
+    if (!rows.length) { lb.innerHTML = '<div class="text-muted text-center">No participants yet.</div>'; return; }
+
+    const rankClass = ['gold','silver','bronze'];
+    const rankEmoji = ['🥇','🥈','🥉'];
+    lb.innerHTML = rows.map((r, i) => `
+      <div class="lb-row">
+        <div class="lb-rank ${rankClass[i] || ''}">${rankEmoji[i] || (i + 1)}</div>
+        <div class="lb-name">${r.name}</div>
+        <div class="lb-days">${r.days}d</div>
+        <div class="lb-fail">${r.relapses > 0 ? r.relapses + '❌' : '✅'}</div>
+      </div>
+    `).join('');
+  }
+
+  // ---- PROFILE ----
+  function renderProfile() {
+    const u = currentUser;
+    document.getElementById('profile-account').innerHTML = `
+      <div class="hist-item"><span class="text-muted">Name</span><strong>${u.name}</strong></div>
+      <div class="hist-item"><span class="text-muted">Email</span><span>${u.email}</span></div>
+      <div class="hist-item"><span class="text-muted">Joined</span><span>${fmtDate(u.createdAt)}</span></div>
+    `;
+
+    const icons = {esewa:'eS', khalti:'Kh', paypal:'PP'};
+    const cls = {esewa:'pay-esewa', khalti:'pay-khalti', paypal:'pay-paypal'};
+    document.getElementById('profile-payment').innerHTML = `
+      <div class="pay-row">
+        <div class="pay-icon ${cls[u.payMethod] || ''}">${icons[u.payMethod] || '?'}</div>
+        <div>
+          <div style="font-weight:600; text-transform:capitalize">${u.payMethod || 'None set'}</div>
+          <div class="text-muted">${u.payId || '—'}</div>
+        </div>
+      </div>
+    `;
+
+    const debt = (u.totalDebt || 0) - (u.paidDebt || 0);
+    document.getElementById('profile-stats').innerHTML = `
+      <div class="hist-item"><span class="text-muted">Current streak</span><span style="font-family:'Space Mono',monospace; color:var(--green)">${daysSince(u.streakStart)} days</span></div>
+      <div class="hist-item"><span class="text-muted">Total relapses</span><span style="font-family:'Space Mono',monospace; color:var(--accent)">${u.totalRelapses || 0}</span></div>
+      <div class="hist-item"><span class="text-muted">Total debt</span><span style="font-family:'Space Mono',monospace; color:var(--accent)">${u.totalDebt || 0} ${u.currency || ''}</span></div>
+      <div class="hist-item"><span class="text-muted">Outstanding</span><span style="font-family:'Space Mono',monospace; color:${debt > 0 ? 'var(--accent)' : 'var(--green)'}">${debt} ${u.currency || ''}</span></div>
+    `;
+  }
+
+  // ---- PAYMENT MODAL ----
+  window.openPayModal = function() {
+    const u = currentUser;
+    const debt = (u.totalDebt || 0) - (u.paidDebt || 0);
+    const oppInfo = ''; // Could look up opponent details
+    document.getElementById('pay-modal-info').textContent = `You owe ${debt} ${u.currency}. Send via your linked ${u.payMethod} account.`;
+
+    const icons = {esewa:'eS', khalti:'Kh', paypal:'PP'};
+    const cls = {esewa:'pay-esewa', khalti:'pay-khalti', paypal:'pay-paypal'};
+    const names = {esewa:'eSewa', khalti:'Khalti', paypal:'PayPal'};
+
+    let body = `
+      <div style="background:var(--surface2); border-radius:12px; padding:1.25rem; margin-bottom:0.75rem">
+        <div class="pay-row">
+          <div class="pay-icon ${cls[u.payMethod] || ''}">${icons[u.payMethod] || '?'}</div>
+          <div>
+            <div style="font-weight:700; font-size:1rem">${names[u.payMethod] || u.payMethod}</div>
+            <div class="text-muted">Your ID: ${u.payId}</div>
+          </div>
+        </div>
+        <div style="font-size:0.85rem; color:var(--muted); margin:0.75rem 0">
+          Amount to send: <strong style="color:var(--text)">${debt} ${u.currency}</strong>
+        </div>
+    `;
+
+    if (u.payMethod === 'paypal') {
+      body += `<a href="https://www.paypal.com/myaccount/transfer/homepage/pay" target="_blank" style="display:block; margin-bottom:0.75rem">
+        <button class="btn btn-primary" style="background:#003087">Open PayPal →</button>
+      </a>`;
+    } else if (u.payMethod === 'esewa') {
+      body += `<div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.75rem">Open your eSewa app → Send Money → enter the amount above</div>`;
+    } else if (u.payMethod === 'khalti') {
+      body += `<div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.75rem">Open your Khalti app → Send Money → enter the amount above</div>`;
+    }
+
+    body += `<button class="btn btn-green" onclick="markPaid()">✓ I've sent the payment</button></div>`;
+    document.getElementById('pay-modal-body').innerHTML = body;
+    openModal('modal-pay');
+  };
+
+  window.markPaid = async function() {
+    await refreshUser();
+    const debt = (currentUser.totalDebt || 0) - (currentUser.paidDebt || 0);
+    await fbPatch(`users/${eKey(currentEmail)}`, { paidDebt: currentUser.totalDebt });
+    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
+    closeModal('modal-pay');
+    renderHome();
+    notify(`Payment of ${debt} ${currentUser.currency} marked as sent ✅`, 'success');
+  };
+
+  // ===================== INIT =====================
+  async function init() {
+    const saved = localStorage.getItem('il_session');
+    if (saved) {
+      try {
+        const user = await fbGet(`users/${eKey(saved)}`);
+        if (user) {
+          currentEmail = saved;
+          currentUser = user;
+          if (!user.streakStart) {
+            showScreen('screen-main');
+            openModal('modal-streak');
+          } else {
+            loadMainApp();
+          }
+          return;
+        }
+      } catch(e) {
+        console.warn('Session load failed:', e);
+      }
+    }
+    showScreen('screen-register');
+  }
+
+  init();
+</script>
+</body>
+</html>
