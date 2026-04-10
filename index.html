@@ -3,223 +3,174 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IRONLOCK — Accountability</title>
+  <title>Novyr — Accountability</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0a0a;
-      --surface: #111111;
-      --surface2: #1a1a1a;
-      --border: #2a2a2a;
-      --accent: #ff4444;
-      --accent2: #ff8800;
-      --text: #f0f0f0;
-      --muted: #777;
-      --green: #22c55e;
-      --yellow: #eab308;
-      --blue: #3b82f6;
+      --bg:#0a0a0a; --surface:#111; --surface2:#1a1a1a; --border:#2a2a2a;
+      --accent:#ff4444; --accent2:#ff8800; --text:#f0f0f0; --muted:#666;
+      --green:#22c55e; --yellow:#eab308; --blue:#3b82f6; --purple:#a855f7;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
 
-    /* ---- LAYOUT ---- */
-    .app { max-width: 500px; margin: 0 auto; padding: 1.5rem 1rem 100px; }
-    .screen { display: none; }
-    .screen.active { display: block; }
+    .app{max-width:500px;margin:0 auto;padding:1.5rem 1rem 100px}
+    .screen{display:none}.screen.active{display:block}
 
-    /* ---- LOGO ---- */
-    .logo { text-align: center; padding: 2.5rem 0 2rem; }
-    .logo h1 {
-      font-size: 2.5rem; font-weight: 800; letter-spacing: -1px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .logo p { color: var(--muted); font-size: 0.78rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 6px; }
+    /* LOGO */
+    .logo{text-align:center;padding:2.5rem 0 2rem}
+    .logo h1{font-size:3rem;font-weight:800;letter-spacing:-3px;background:linear-gradient(135deg,#ff4444 0%,#ff8800 50%,#ffcc00 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .logo p{color:var(--muted);font-size:0.7rem;letter-spacing:4px;text-transform:uppercase;margin-top:6px}
 
-    /* ---- CARDS ---- */
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; }
-    .card-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); margin-bottom: 1rem; }
+    /* CARDS */
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem}
+    .card-title{font-size:0.67rem;text-transform:uppercase;letter-spacing:2.5px;color:var(--muted);margin-bottom:1rem}
 
-    /* ---- FORMS ---- */
-    .form-group { margin-bottom: 1.1rem; }
-    .form-group label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 6px; }
-    .form-group input, .form-group select {
-      width: 100%; background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 10px; padding: 0.8rem 1rem; color: var(--text);
-      font-family: 'Syne', sans-serif; font-size: 0.95rem; transition: border-color 0.15s;
-    }
-    .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--accent); }
-    .form-group select option { background: #1a1a1a; }
-    .form-group input::placeholder { color: #444; }
+    /* FORMS */
+    .form-group{margin-bottom:1.1rem}
+    .form-group label{display:block;font-size:0.67rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px}
+    .form-group input,.form-group select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;color:var(--text);font-family:'Syne',sans-serif;font-size:.95rem;transition:border-color .15s}
+    .form-group input:focus,.form-group select:focus{outline:none;border-color:var(--accent)}
+    .form-group select option{background:#1a1a1a}
+    .form-group input::placeholder{color:#3a3a3a}
 
-    /* ---- BUTTONS ---- */
-    .btn {
-      width: 100%; padding: 0.9rem 1.5rem; border-radius: 12px; border: none;
-      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem;
-      cursor: pointer; transition: all 0.15s; letter-spacing: 0.5px; display: block;
-    }
-    .btn:active { transform: scale(0.98); }
-    .btn + .btn { margin-top: 0.75rem; }
-    .btn-primary { background: var(--accent); color: white; }
-    .btn-primary:hover { background: #e03333; }
-    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-    .btn-secondary:hover { border-color: #444; }
-    .btn-ghost { background: transparent; color: var(--muted); font-size: 0.85rem; }
-    .btn-ghost:hover { color: var(--text); }
-    .btn-green { background: var(--green); color: white; }
-    .btn-green:hover { background: #16a34a; }
-    .btn-sm { padding: 0.5rem 1rem; font-size: 0.8rem; width: auto; border-radius: 8px; display: inline-block; }
-    .btn-loading { opacity: 0.6; pointer-events: none; }
+    /* BUTTONS */
+    .btn{width:100%;padding:.9rem 1.5rem;border-radius:12px;border:none;font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .15s;letter-spacing:.5px;display:block}
+    .btn:active{transform:scale(.98)}.btn+.btn{margin-top:.75rem}
+    .btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#e03333}
+    .btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{border-color:#444}
+    .btn-ghost{background:transparent;color:var(--muted);font-size:.85rem}.btn-ghost:hover{color:var(--text)}
+    .btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#16a34a}
+    .btn-esewa{background:#3d8b2f;color:#fff}.btn-esewa:hover{background:#2d6e21}
+    .btn-khalti{background:#5c2d91;color:#fff}.btn-khalti:hover{background:#4a2275}
+    .btn-paypal{background:#003087;color:#fff}
+    .btn-sm{padding:.5rem 1rem;font-size:.8rem;width:auto;border-radius:8px;display:inline-block}
+    .btn-loading{opacity:.6;pointer-events:none}
 
-    /* ---- TABS ---- */
-    .tabs { display: flex; gap: 4px; background: var(--surface); border-radius: 12px; padding: 4px; border: 1px solid var(--border); margin-bottom: 1.5rem; }
-    .tab { flex: 1; padding: 0.55rem; text-align: center; border-radius: 9px; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: var(--muted); transition: all 0.15s; border: none; background: transparent; font-family: 'Syne', sans-serif; }
-    .tab.active { background: var(--surface2); color: var(--text); }
+    /* STREAK */
+    .streak-hero{text-align:center;padding:1.5rem 0 1rem}
+    .streak-number{font-size:5.5rem;font-weight:800;line-height:1;font-family:'Space Mono',monospace;transition:color .5s}
+    .streak-number.great{color:var(--green)}.streak-number.ok{color:var(--yellow)}.streak-number.low{color:var(--accent)}
+    .streak-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:3px;margin-top:6px}
 
-    /* ---- STREAK ---- */
-    .streak-hero { text-align: center; padding: 1.5rem 0; }
-    .streak-number { font-size: 5.5rem; font-weight: 800; line-height: 1; font-family: 'Space Mono', monospace; }
-    .streak-number.great { color: var(--green); }
-    .streak-number.ok { color: var(--yellow); }
-    .streak-number.low { color: var(--accent); }
-    .streak-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 3px; margin-top: 6px; }
+    /* RELAPSE BUTTON */
+    .confess-wrap{display:flex;flex-direction:column;align-items:center;padding:1rem 0 .5rem}
+    .confess-btn{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 38% 35%,#ff7070,#ff2222 55%,#990000);border:none;cursor:pointer;font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;color:#fff;letter-spacing:1px;text-transform:uppercase;transition:all .2s;box-shadow:0 0 50px rgba(255,34,34,.2),inset 0 -5px 0 rgba(0,0,0,.4)}
+    .confess-btn:hover{transform:scale(1.06);box-shadow:0 0 80px rgba(255,34,34,.4),inset 0 -5px 0 rgba(0,0,0,.4)}
+    .confess-btn:active{transform:scale(.96)}
+    .confess-hint{font-size:.72rem;color:var(--muted);margin-top:.75rem;text-align:center;line-height:1.5}
 
-    /* ---- BIG RED BUTTON ---- */
-    .confess-wrap { display: flex; flex-direction: column; align-items: center; padding: 1rem 0 0.5rem; }
-    .confess-btn {
-      width: 150px; height: 150px; border-radius: 50%;
-      background: radial-gradient(circle at 38% 35%, #ff7070, #ff2222 55%, #aa0000);
-      border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-weight: 800;
-      font-size: 0.95rem; color: white; letter-spacing: 1px; text-transform: uppercase;
-      transition: all 0.2s; box-shadow: 0 0 50px rgba(255,34,34,0.25), inset 0 -5px 0 rgba(0,0,0,0.35);
-    }
-    .confess-btn:hover { transform: scale(1.06); box-shadow: 0 0 70px rgba(255,34,34,0.4), inset 0 -5px 0 rgba(0,0,0,0.35); }
-    .confess-btn:active { transform: scale(0.96); }
-    .confess-hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.75rem; text-align: center; }
+    /* MODE SELECT */
+    .mode-card{background:var(--surface);border:2px solid var(--border);border-radius:16px;padding:1.25rem;cursor:pointer;transition:all .18s;margin-bottom:.75rem}
+    .mode-card:hover{border-color:#3a3a3a;transform:translateY(-1px)}
+    .mode-card.selected{border-color:var(--accent);background:rgba(255,68,68,.04)}
+    .mode-card h3{font-size:1rem;margin-bottom:5px}
+    .mode-card p{font-size:.82rem;color:var(--muted);line-height:1.4}
+    .mode-icon{font-size:1.8rem;margin-bottom:8px}
 
-    /* ---- MODE CARDS ---- */
-    .mode-card { background: var(--surface); border: 2px solid var(--border); border-radius: 16px; padding: 1.25rem; cursor: pointer; transition: all 0.2s; margin-bottom: 0.75rem; }
-    .mode-card:hover { border-color: #3a3a3a; transform: translateY(-1px); }
-    .mode-card.selected { border-color: var(--accent); }
-    .mode-card h3 { font-size: 1rem; margin-bottom: 5px; }
-    .mode-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.4; }
-    .mode-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    /* BADGES */
+    .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+    .badge-red{background:rgba(255,68,68,.12);color:var(--accent)}
+    .badge-green{background:rgba(34,197,94,.12);color:var(--green)}
+    .badge-yellow{background:rgba(234,179,8,.12);color:var(--yellow)}
+    .badge-blue{background:rgba(59,130,246,.12);color:var(--blue)}
 
-    /* ---- BADGES ---- */
-    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-    .badge-red { background: rgba(255,68,68,0.15); color: var(--accent); }
-    .badge-green { background: rgba(34,197,94,0.15); color: var(--green); }
-    .badge-yellow { background: rgba(234,179,8,0.15); color: var(--yellow); }
-    .badge-blue { background: rgba(59,130,246,0.15); color: var(--blue); }
+    /* LEADERBOARD */
+    .lb-row{display:flex;align-items:center;gap:12px;padding:.8rem 0;border-bottom:1px solid var(--border)}
+    .lb-row:last-child{border-bottom:none}
+    .lb-row.me{background:rgba(255,68,68,.04);border-radius:8px;padding-left:8px;padding-right:8px}
+    .lb-rank{font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;width:34px;color:var(--muted);flex-shrink:0}
+    .lb-rank.gold{color:#ffd700}.lb-rank.silver{color:#c0c0c0}.lb-rank.bronze{color:#cd7f32}
+    .lb-name{flex:1;font-weight:600;font-size:.9rem}
+    .lb-you-tag{font-size:.58rem;color:var(--accent);margin-left:4px;font-weight:700;text-transform:uppercase}
+    .lb-days{font-family:'Space Mono',monospace;font-size:.85rem;color:var(--green)}
+    .lb-fail{font-family:'Space Mono',monospace;font-size:.8rem;color:var(--accent);margin-left:6px}
 
-    /* ---- LEADERBOARD ---- */
-    .lb-row { display: flex; align-items: center; gap: 12px; padding: 0.8rem 0; border-bottom: 1px solid var(--border); }
-    .lb-row:last-child { border-bottom: none; }
-    .lb-rank { font-family: 'Space Mono', monospace; font-size: 1.1rem; font-weight: 700; width: 36px; color: var(--muted); flex-shrink: 0; }
-    .lb-rank.gold { color: #ffd700; }
-    .lb-rank.silver { color: #c0c0c0; }
-    .lb-rank.bronze { color: #cd7f32; }
-    .lb-name { flex: 1; font-weight: 600; font-size: 0.9rem; }
-    .lb-days { font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--green); }
-    .lb-fail { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--accent); margin-left: 6px; }
+    /* HISTORY */
+    .hist-item{display:flex;justify-content:space-between;align-items:center;padding:.8rem 0;border-bottom:1px solid var(--border)}
+    .hist-item:last-child{border-bottom:none}
 
-    /* ---- HISTORY ---- */
-    .hist-item { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0; border-bottom: 1px solid var(--border); }
-    .hist-item:last-child { border-bottom: none; }
+    /* NAV */
+    .nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:flex;z-index:100;padding:6px 0 10px}
+    .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;cursor:pointer;color:var(--muted);font-size:.57rem;text-transform:uppercase;letter-spacing:.8px;transition:color .15s;border:none;background:transparent;font-family:'Syne',sans-serif;position:relative}
+    .nav-item.active{color:var(--accent)}
+    .nav-icon{font-size:1.2rem;line-height:1}
+    .nav-dot{position:absolute;top:4px;right:calc(50% - 14px);width:7px;height:7px;background:var(--accent);border-radius:50%;border:2px solid var(--bg);display:none}
+    .nav-dot.show{display:block}
 
-    /* ---- NAV ---- */
-    .nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); display: flex; z-index: 100; padding: 6px 0 10px; }
-    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 4px; cursor: pointer; color: var(--muted); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; transition: color 0.15s; border: none; background: transparent; font-family: 'Syne', sans-serif; }
-    .nav-item.active { color: var(--accent); }
-    .nav-icon { font-size: 1.25rem; line-height: 1; }
+    /* MODALS */
+    .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;z-index:500;padding:1rem;overflow-y:auto}
+    .modal-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2rem;max-width:380px;width:100%;max-height:90vh;overflow-y:auto}
+    .modal-box h2{font-size:1.4rem;margin-bottom:.75rem}
 
-    /* ---- MODALS ---- */
-    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 500; padding: 1rem; }
-    .modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; max-width: 360px; width: 100%; }
-    .modal-box h2 { font-size: 1.4rem; margin-bottom: 0.75rem; }
+    /* PAYMENT */
+    .pay-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.65rem;flex-shrink:0}
+    .pay-esewa{background:#3d8b2f;color:#fff}
+    .pay-khalti{background:#5c2d91;color:#fff}
+    .pay-paypal{background:#003087;color:#fff}
+    .pay-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+    .pay-step{font-size:.78rem;color:var(--muted);line-height:1.7;padding:.75rem;background:var(--surface2);border-radius:8px;margin-bottom:.75rem;border-left:2px solid var(--border)}
+    .pay-step strong{color:var(--text)}
 
-    /* ---- PAYMENT ---- */
-    .pay-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.65rem; flex-shrink: 0; }
-    .pay-esewa { background: #60bb46; color: white; }
-    .pay-khalti { background: #5c2d91; color: white; }
-    .pay-paypal { background: #003087; color: white; }
-    .pay-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    /* NOTIFICATIONS */
+    .notif-item{padding:.85rem 0;border-bottom:1px solid var(--border)}
+    .notif-item:last-child{border-bottom:none}
+    .notif-item.unread{border-left:3px solid var(--accent);padding-left:.75rem;margin-left:-.75rem}
+    .notif-msg{font-size:.88rem;line-height:1.45}
+    .notif-time{font-size:.68rem;color:var(--muted);margin-top:3px}
+    .notif-type-relapse .notif-msg::before{content:'💀 '}
+    .notif-type-join .notif-msg::before{content:'⚔️ '}
+    .notif-type-payment .notif-msg::before{content:'💰 '}
 
-    /* ---- NOTIFICATION ---- */
-    .notif { position: fixed; top: 1rem; left: 50%; transform: translateX(-50%) translateY(-120px); background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 0.9rem 1.4rem; font-size: 0.88rem; z-index: 1000; transition: transform 0.3s ease; max-width: 320px; text-align: center; white-space: pre-line; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-    .notif.show { transform: translateX(-50%) translateY(0); }
-    .notif.error { border-color: var(--accent); color: var(--accent); }
-    .notif.success { border-color: var(--green); color: var(--green); }
+    /* TOAST */
+    .toast{position:fixed;top:1rem;left:50%;transform:translateX(-50%) translateY(-120px);background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.9rem 1.4rem;font-size:.88rem;z-index:1000;transition:transform .3s ease;max-width:330px;text-align:center;white-space:pre-line;box-shadow:0 4px 24px rgba(0,0,0,.7)}
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .toast.error{border-color:var(--accent);color:var(--accent)}
+    .toast.success{border-color:var(--green);color:var(--green)}
+    .toast.info{border-color:var(--blue);color:var(--blue)}
 
-    /* ---- LOADING ---- */
-    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; margin-right: 8px; vertical-align: middle; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 1rem; }
-    .loading-screen p { color: var(--muted); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; }
-
-    /* ---- INVITE CODE ---- */
-    .code-display { font-family: 'Space Mono', monospace; font-size: 2rem; font-weight: 700; letter-spacing: 8px; color: var(--accent2); text-align: center; padding: 1rem; background: var(--surface2); border-radius: 12px; border: 1px dashed var(--border); margin: 1rem 0; }
-
-    /* ---- MISC ---- */
-    .divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
-    .hidden { display: none !important; }
-    .text-center { text-align: center; }
-    .text-muted { color: var(--muted); font-size: 0.82rem; }
-    .mt-1 { margin-top: 0.5rem; }
-    .mt-2 { margin-top: 1rem; }
-    .flex { display: flex; }
-    .flex-between { display: flex; justify-content: space-between; align-items: center; }
-    .gap { gap: 0.75rem; }
-    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-
-    /* ---- STAT MINI ---- */
-    .stat-mini { background: var(--surface2); border-radius: 12px; padding: 1rem; text-align: center; }
-    .stat-mini .val { font-size: 1.8rem; font-weight: 800; font-family: 'Space Mono', monospace; }
-    .stat-mini .lbl { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
+    /* MISC */
+    .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:currentColor;border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:middle}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:1rem}
+    .code-display{font-family:'Space Mono',monospace;font-size:2rem;font-weight:700;letter-spacing:8px;color:var(--accent2);text-align:center;padding:1rem;background:var(--surface2);border-radius:12px;border:1px dashed rgba(255,136,0,.3);margin:1rem 0}
+    .divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
+    .hidden{display:none!important}
+    .text-center{text-align:center}
+    .text-muted{color:var(--muted);font-size:.82rem}
+    .mt-1{margin-top:.5rem}.mt-2{margin-top:1rem}
+    .flex-between{display:flex;justify-content:space-between;align-items:center}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .stat-mini{background:var(--surface2);border-radius:12px;padding:1rem;text-align:center}
+    .stat-mini .val{font-size:1.8rem;font-weight:800;font-family:'Space Mono',monospace}
+    .stat-mini .lbl{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
   </style>
 </head>
 <body>
 
-<!-- NOTIFICATION TOAST -->
-<div id="notif" class="notif"></div>
+<div id="toast" class="toast"></div>
 
-<!-- ============================================================ -->
 <!-- LOADING -->
-<!-- ============================================================ -->
 <div id="screen-loading" class="screen active">
   <div class="loading-screen">
-    <div style="font-size:2.5rem; font-weight:800; background:linear-gradient(135deg,#ff4444,#ff8800);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">IRONLOCK</div>
-    <div style="display:flex;align-items:center;gap:8px;color:var(--muted);font-size:0.8rem">
-      <div class="spinner" style="border-top-color:var(--muted)"></div>
-      Loading...
+    <div style="font-size:3.5rem;font-weight:800;background:linear-gradient(135deg,#ff4444,#ff8800,#ffcc00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-3px">Novyr</div>
+    <div style="display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.75rem;letter-spacing:2px">
+      <div class="spinner" style="color:var(--muted)"></div>Loading
     </div>
   </div>
 </div>
 
-<!-- ============================================================ -->
 <!-- REGISTER -->
-<!-- ============================================================ -->
 <div id="screen-register" class="screen">
   <div class="app">
-    <div class="logo"><h1>IRONLOCK</h1><p>Accountability · Discipline · Trust</p></div>
-
+    <div class="logo"><h1>Novyr</h1><p>Accountability · Discipline · Trust</p></div>
     <div class="card">
       <div class="card-title">Create your account</div>
-      <div class="form-group">
-        <label>Display Name</label>
-        <input type="text" id="reg-name" placeholder="Your name" autocomplete="name" />
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email" />
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="reg-pass" placeholder="Min 6 characters" autocomplete="new-password" />
-      </div>
+      <div class="form-group"><label>Display Name</label><input type="text" id="reg-name" placeholder="Your name" autocomplete="name"/></div>
+      <div class="form-group"><label>Email</label><input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email"/></div>
+      <div class="form-group"><label>Password</label><input type="password" id="reg-pass" placeholder="Min 6 characters" autocomplete="new-password"/></div>
     </div>
-
     <div class="card">
       <div class="card-title">💳 Payment method — required for accountability</div>
       <div class="form-group">
@@ -233,935 +184,869 @@
       </div>
       <div id="pay-detail-esewa" class="hidden">
         <div class="pay-row"><div class="pay-icon pay-esewa">eS</div><span style="font-weight:600">eSewa</span></div>
-        <div class="form-group"><label>eSewa Phone Number</label><input type="tel" id="reg-esewa" placeholder="98XXXXXXXX" /></div>
+        <div class="form-group"><label>eSewa Phone Number</label><input type="tel" id="reg-esewa" placeholder="98XXXXXXXX"/></div>
       </div>
       <div id="pay-detail-khalti" class="hidden">
         <div class="pay-row"><div class="pay-icon pay-khalti">Kh</div><span style="font-weight:600">Khalti</span></div>
-        <div class="form-group"><label>Khalti Phone Number</label><input type="tel" id="reg-khalti" placeholder="98XXXXXXXX" /></div>
+        <div class="form-group"><label>Khalti Phone Number</label><input type="tel" id="reg-khalti" placeholder="98XXXXXXXX"/></div>
       </div>
       <div id="pay-detail-paypal" class="hidden">
         <div class="pay-row"><div class="pay-icon pay-paypal">PP</div><span style="font-weight:600">PayPal</span></div>
-        <div class="form-group"><label>PayPal Email</label><input type="email" id="reg-paypal" placeholder="paypal@email.com" /></div>
+        <div class="form-group"><label>PayPal Email</label><input type="email" id="reg-paypal" placeholder="paypal@email.com"/></div>
       </div>
     </div>
-
     <button class="btn btn-primary" id="btn-register" onclick="doRegister()">Create Account →</button>
     <button class="btn btn-ghost" onclick="showScreen('screen-login')">Already have an account? Sign in</button>
   </div>
 </div>
 
-<!-- ============================================================ -->
 <!-- LOGIN -->
-<!-- ============================================================ -->
 <div id="screen-login" class="screen">
   <div class="app">
-    <div class="logo"><h1>IRONLOCK</h1><p>Welcome back</p></div>
+    <div class="logo"><h1>Novyr</h1><p>Welcome back</p></div>
     <div class="card">
-      <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com" autocomplete="email" /></div>
-      <div class="form-group"><label>Password</label><input type="password" id="login-pass" placeholder="Password" autocomplete="current-password" /></div>
+      <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com" autocomplete="email"/></div>
+      <div class="form-group"><label>Password</label><input type="password" id="login-pass" placeholder="Password" autocomplete="current-password"/></div>
     </div>
     <button class="btn btn-primary" id="btn-login" onclick="doLogin()">Sign In →</button>
     <button class="btn btn-ghost" onclick="showScreen('screen-register')">Create new account</button>
   </div>
 </div>
 
-<!-- ============================================================ -->
 <!-- STREAK INIT MODAL -->
-<!-- ============================================================ -->
 <div id="modal-streak" class="modal-bg hidden">
   <div class="modal-box">
-    <div style="font-size:2.5rem; text-align:center; margin-bottom:0.75rem">🔥</div>
+    <div style="font-size:2.5rem;text-align:center;margin-bottom:.75rem">🔥</div>
     <h2 style="text-align:center">Start your streak</h2>
-    <p style="color:var(--muted); font-size:0.88rem; line-height:1.55; margin:0.75rem 0 1.5rem; text-align:center">
-      Should I start counting your streak from right now,<br>or do you want to enter how many days you've already been clean?
+    <p style="color:var(--muted);font-size:.88rem;line-height:1.6;margin:.75rem 0 1.5rem;text-align:center">
+      Should I start counting your streak from right now, or do you want to enter how many days you've already been clean?
     </p>
-    <button class="btn btn-primary" onclick="streakFromNow()" style="margin-bottom:0.75rem">🚀 Start from today (Day 0)</button>
-    <div style="display:flex; gap:0.75rem; align-items:center">
+    <button class="btn btn-primary" onclick="streakFromNow()" style="margin-bottom:.75rem">🚀 Start from today (Day 0)</button>
+    <div style="display:flex;gap:.75rem;align-items:center">
       <input type="number" id="streak-existing" min="0" placeholder="Days already clean"
-        style="flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:0.8rem 1rem; color:var(--text); font-family:'Syne',sans-serif; font-size:0.9rem;" />
+        style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;color:var(--text);font-family:'Syne',sans-serif;font-size:.9rem"/>
       <button class="btn btn-secondary btn-sm" onclick="streakFromDays()">Use this →</button>
     </div>
   </div>
 </div>
 
-<!-- ============================================================ -->
 <!-- MAIN APP -->
-<!-- ============================================================ -->
 <div id="screen-main" class="screen">
 
-  <!-- HOME TAB -->
+  <!-- HOME -->
   <div id="tab-home" class="app">
     <div class="flex-between" style="margin-bottom:1.5rem">
       <div>
-        <div style="font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:2px">Welcome back</div>
-        <div style="font-size:1.3rem; font-weight:700" id="home-name">—</div>
+        <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px">Welcome back</div>
+        <div style="font-size:1.3rem;font-weight:700" id="home-name">—</div>
       </div>
       <button class="btn btn-secondary btn-sm" onclick="doLogout()">Sign out</button>
     </div>
-
     <div class="card">
       <div class="card-title">Current streak</div>
       <div class="streak-hero">
         <div id="streak-num" class="streak-number low">0</div>
         <div class="streak-label">days clean</div>
       </div>
-      <div id="mode-indicator" style="text-align:center; margin-bottom:1.2rem"></div>
+      <div id="mode-indicator" style="text-align:center;margin-bottom:1.2rem"></div>
       <div class="confess-wrap">
-        <button class="confess-btn" onclick="openRelapseModal()">
-          I<br>RELAPSED
-        </button>
+        <button class="confess-btn" onclick="openRelapseModal()">I<br>RELAPSED</button>
         <p class="confess-hint">Tap only if you've relapsed.<br>This runs on your honor.</p>
       </div>
     </div>
-
-    <!-- Debt card (shown when owed) -->
     <div class="card hidden" id="home-debt-card">
       <div class="card-title">💸 Outstanding debt</div>
-      <div id="home-debt-amount" style="font-size:2rem; font-weight:800; font-family:'Space Mono',monospace; color:var(--accent)"></div>
+      <div id="home-debt-amount" style="font-size:2rem;font-weight:800;font-family:'Space Mono',monospace;color:var(--accent)"></div>
       <div id="home-debt-sub" class="text-muted mt-1"></div>
       <button class="btn btn-green mt-2" onclick="openPayModal()">Pay now →</button>
     </div>
-
-    <!-- Battle snapshot (shown when in competition) -->
     <div class="card hidden" id="home-battle-card">
       <div class="card-title">⚔️ Battle snapshot</div>
-      <div id="home-battle-content"></div>
+      <div id="home-battle-body"></div>
     </div>
   </div>
 
-  <!-- COMPETE TAB -->
+  <!-- COMPETE -->
   <div id="tab-compete" class="app hidden">
     <div style="margin-bottom:1.5rem">
-      <div style="font-size:1.5rem; font-weight:800">Compete</div>
+      <div style="font-size:1.5rem;font-weight:800">Compete</div>
       <div class="text-muted">Challenge friends. Stay accountable.</div>
     </div>
-
-    <!-- No active challenge -->
     <div id="compete-setup">
       <div class="mode-card" id="mc-solo" onclick="pickMode('solo')">
-        <div class="mode-icon">💰</div>
-        <h3>Solo Pledge</h3>
-        <p>You relapse → you send agreed money to the app owner. Pure self-accountability.</p>
+        <div class="mode-icon">💰</div><h3>Solo Pledge</h3>
+        <p>You relapse → you send money to the developer. Pure self-accountability.</p>
       </div>
       <div class="mode-card" id="mc-battle" onclick="pickMode('battle')">
-        <div class="mode-icon">⚔️</div>
-        <h3>Friend Battle</h3>
-        <p>1v1 with a friend. Each relapse costs you money — paid to them. They get notified on every slip.</p>
+        <div class="mode-icon">⚔️</div><h3>Friend Battle</h3>
+        <p>1v1 with a friend. Each relapse costs money paid to your opponent. They're notified instantly.</p>
       </div>
-
       <div id="form-solo" class="hidden">
         <div class="card">
-          <div class="card-title">Solo pledge details</div>
-          <div class="form-group"><label>Penalty per relapse</label><input type="number" id="solo-penalty" placeholder="e.g. 500" min="1" /></div>
-          <div class="form-group">
-            <label>Currency</label>
-            <select id="solo-currency">
-              <option value="NPR">NPR — Nepalese Rupee</option>
-              <option value="USD">USD — US Dollar</option>
-            </select>
+          <div class="card-title">Solo pledge</div>
+          <div class="form-group"><label>Penalty per relapse</label><input type="number" id="solo-penalty" placeholder="e.g. 500" min="1"/></div>
+          <div class="form-group"><label>Currency</label>
+            <select id="solo-currency"><option value="NPR">NPR — Nepalese Rupee</option><option value="USD">USD</option></select>
           </div>
           <button class="btn btn-primary" onclick="startSolo()">Activate Solo Pledge</button>
         </div>
       </div>
-
       <div id="form-battle" class="hidden">
         <div class="card">
           <div class="card-title">Create a battle</div>
-          <div class="form-group"><label>Penalty per relapse</label><input type="number" id="battle-penalty" placeholder="e.g. 500" min="1" /></div>
-          <div class="form-group">
-            <label>Currency</label>
-            <select id="battle-currency">
-              <option value="NPR">NPR — Nepalese Rupee</option>
-              <option value="USD">USD — US Dollar</option>
-            </select>
+          <div class="form-group"><label>Penalty per relapse</label><input type="number" id="battle-penalty" placeholder="e.g. 500" min="1"/></div>
+          <div class="form-group"><label>Currency</label>
+            <select id="battle-currency"><option value="NPR">NPR — Nepalese Rupee</option><option value="USD">USD</option></select>
           </div>
           <button class="btn btn-primary" onclick="createBattle()">Generate invite code</button>
           <div class="divider"></div>
-          <div class="card-title">Or join an existing battle</div>
+          <div class="card-title">Or join existing</div>
           <div class="form-group">
-            <label>Enter invite code</label>
+            <label>Invite code</label>
             <input type="text" id="join-code" placeholder="ABC123" maxlength="6"
-              style="text-transform:uppercase; letter-spacing:6px; text-align:center; font-size:1.3rem; font-family:'Space Mono',monospace" />
+              style="text-transform:uppercase;letter-spacing:6px;text-align:center;font-size:1.3rem;font-family:'Space Mono',monospace"/>
           </div>
           <button class="btn btn-secondary" onclick="joinBattle()">Join battle →</button>
         </div>
       </div>
     </div>
-
-    <!-- Active challenge view -->
     <div id="compete-active" class="hidden">
-      <div class="card" id="active-battle-card">
-        <div class="card-title">Active battle</div>
-        <div id="active-battle-body"></div>
-      </div>
+      <div class="card"><div class="card-title">Active battle</div><div id="active-battle-body"></div></div>
       <button class="btn btn-secondary" onclick="leaveBattle()">Leave battle</button>
     </div>
   </div>
 
-  <!-- HISTORY TAB -->
-  <div id="tab-history" class="app hidden">
+  <!-- NOTIFICATIONS -->
+  <div id="tab-notifs" class="app hidden">
     <div style="margin-bottom:1.5rem">
-      <div style="font-size:1.5rem; font-weight:800">History</div>
-      <div class="text-muted">Your full relapse log</div>
+      <div style="font-size:1.5rem;font-weight:800">Notifications</div>
+      <div class="text-muted">Updates from your battles</div>
     </div>
-    <div id="history-content"></div>
+    <div id="notifs-content"></div>
   </div>
 
-  <!-- LEADERBOARD TAB -->
+  <!-- LEADERBOARD -->
   <div id="tab-leaderboard" class="app hidden">
     <div style="margin-bottom:1.5rem">
-      <div style="font-size:1.5rem; font-weight:800">Leaderboard</div>
-      <div class="text-muted">All active battles, ranked by streak</div>
+      <div style="font-size:1.5rem;font-weight:800">Leaderboard</div>
+      <div class="text-muted">Your battles only · private</div>
     </div>
-    <div class="card" id="lb-content"><div class="text-muted text-center">No active battles yet.</div></div>
+    <div id="lb-content"></div>
   </div>
 
-  <!-- PROFILE TAB -->
+  <!-- PROFILE -->
   <div id="tab-profile" class="app hidden">
-    <div style="margin-bottom:1.5rem">
-      <div style="font-size:1.5rem; font-weight:800">Profile</div>
-    </div>
-    <div class="card">
-      <div class="card-title">Account</div>
-      <div id="profile-account"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Payment</div>
-      <div id="profile-payment"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">All-time stats</div>
-      <div id="profile-stats"></div>
-    </div>
+    <div style="margin-bottom:1.5rem"><div style="font-size:1.5rem;font-weight:800">Profile</div></div>
+    <div class="card"><div class="card-title">Account</div><div id="profile-account"></div></div>
+    <div class="card"><div class="card-title">Payment method</div><div id="profile-payment"></div></div>
+    <div class="card"><div class="card-title">All-time stats</div><div id="profile-stats"></div></div>
     <button class="btn btn-secondary mt-2" onclick="doLogout()">Sign out</button>
   </div>
 
-  <!-- BOTTOM NAV -->
+  <!-- NAV -->
   <nav class="nav">
     <button class="nav-item active" id="nav-home" onclick="goTab('home')"><span class="nav-icon">🔥</span>Home</button>
     <button class="nav-item" id="nav-compete" onclick="goTab('compete')"><span class="nav-icon">⚔️</span>Compete</button>
-    <button class="nav-item" id="nav-history" onclick="goTab('history')"><span class="nav-icon">📋</span>History</button>
+    <button class="nav-item" id="nav-notifs" onclick="goTab('notifs')">
+      <span class="nav-icon">🔔</span>Alerts
+      <span class="nav-dot" id="notif-dot"></span>
+    </button>
     <button class="nav-item" id="nav-leaderboard" onclick="goTab('leaderboard')"><span class="nav-icon">🏆</span>Ranks</button>
     <button class="nav-item" id="nav-profile" onclick="goTab('profile')"><span class="nav-icon">👤</span>Profile</button>
   </nav>
 </div>
 
-<!-- ============================================================ -->
-<!-- RELAPSE CONFIRM MODAL -->
-<!-- ============================================================ -->
+<!-- RELAPSE CONFIRM -->
 <div id="modal-relapse" class="modal-bg hidden">
   <div class="modal-box text-center">
-    <div style="font-size:3rem; margin-bottom:1rem">😔</div>
+    <div style="font-size:3rem;margin-bottom:1rem">😔</div>
     <h2>Be honest</h2>
-    <p style="color:var(--muted); font-size:0.88rem; line-height:1.6; margin:0.75rem 0 1.5rem">This app runs entirely on personal integrity. Only confirm if you genuinely relapsed.</p>
-    <button class="btn btn-primary" onclick="doRelapse()" style="margin-bottom:0.75rem">Yes, I relapsed</button>
+    <p style="color:var(--muted);font-size:.88rem;line-height:1.6;margin:.75rem 0 1.5rem">
+      This app runs entirely on personal integrity.<br>Only confirm if you genuinely relapsed.
+    </p>
+    <button class="btn btn-primary" onclick="doRelapse()" style="margin-bottom:.75rem">Yes, I relapsed</button>
     <button class="btn btn-ghost" onclick="closeModal('modal-relapse')">No, I'm still clean</button>
   </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- INVITE CODE MODAL -->
-<!-- ============================================================ -->
+<!-- INVITE CODE -->
 <div id="modal-invite" class="modal-bg hidden">
   <div class="modal-box text-center">
-    <h2>Challenge created! 🎉</h2>
-    <p style="color:var(--muted); font-size:0.88rem; margin-top:0.5rem">Share this code with your opponent:</p>
+    <h2>Battle created! 🎉</h2>
+    <p style="color:var(--muted);font-size:.88rem;margin-top:.5rem">Share this code with your opponent:</p>
     <div class="code-display" id="invite-code-val">------</div>
-    <p class="text-muted">The battle begins as soon as they join.</p>
+    <p class="text-muted">The battle starts as soon as they join with this code.</p>
     <button class="btn btn-primary mt-2" onclick="closeInviteModal()">Done</button>
   </div>
 </div>
 
-<!-- ============================================================ -->
 <!-- PAY MODAL -->
-<!-- ============================================================ -->
 <div id="modal-pay" class="modal-bg hidden">
   <div class="modal-box">
-    <h2>💸 Pay your penalty</h2>
-    <p id="pay-modal-info" style="color:var(--muted); font-size:0.85rem; margin:0.75rem 0 1.25rem; line-height:1.5"></p>
+    <h2>💸 Pay penalty</h2>
+    <p id="pay-modal-info" style="color:var(--muted);font-size:.85rem;margin:.75rem 0 1.25rem;line-height:1.5"></p>
     <div id="pay-modal-body"></div>
     <button class="btn btn-ghost mt-2" onclick="closeModal('modal-pay')">Cancel</button>
   </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- JS -->
-<!-- ============================================================ -->
 <script type="module">
-  // ===================== FIREBASE CONFIG =====================
-  const DB_URL = "https://accountability-21545-default-rtdb.asia-southeast1.firebasedatabase.app";
+  const DB = "https://accountability-21545-default-rtdb.asia-southeast1.firebasedatabase.app";
 
-  async function fbGet(path) {
-    const r = await fetch(`${DB_URL}/${path}.json`);
-    if (!r.ok) throw new Error(`DB read error ${r.status}`);
-    return r.json();
-  }
-  async function fbSet(path, data) {
-    const r = await fetch(`${DB_URL}/${path}.json`, {
-      method: "PUT", headers: {"Content-Type":"application/json"}, body: JSON.stringify(data)
-    });
-    if (!r.ok) throw new Error(`DB write error ${r.status}`);
-    return r.json();
-  }
-  async function fbPatch(path, data) {
-    const r = await fetch(`${DB_URL}/${path}.json`, {
-      method: "PATCH", headers: {"Content-Type":"application/json"}, body: JSON.stringify(data)
-    });
-    if (!r.ok) throw new Error(`DB patch error ${r.status}`);
-    return r.json();
-  }
-  async function fbPost(path, data) {
-    const r = await fetch(`${DB_URL}/${path}.json`, {
-      method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(data)
-    });
-    if (!r.ok) throw new Error(`DB post error ${r.status}`);
-    return r.json();
-  }
-  async function fbDel(path) {
-    await fetch(`${DB_URL}/${path}.json`, { method: "DELETE" });
-  }
+  async function fbGet(p)       { const r=await fetch(`${DB}/${p}.json`); if(!r.ok) throw new Error(r.status); return r.json(); }
+  async function fbSet(p,d)     { const r=await fetch(`${DB}/${p}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)}); if(!r.ok) throw new Error(r.status); return r.json(); }
+  async function fbPatch(p,d)   { const r=await fetch(`${DB}/${p}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)}); if(!r.ok) throw new Error(r.status); return r.json(); }
+  async function fbDel(p)       { await fetch(`${DB}/${p}.json`,{method:"DELETE"}); }
 
-  // email → safe firebase key
-  function eKey(email) {
-    return email.toLowerCase().replace(/\./g,"_dot_").replace(/@/g,"_at_");
+  function eKey(e){ return e.toLowerCase().replace(/\./g,"_dot_").replace(/@/g,"_at_"); }
+
+  let CU=null, CE=null, toastTimer=null, pollTimer=null;
+
+  // ---- UI ----
+  window.showScreen=function(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')};
+  function openModal(id){document.getElementById(id).classList.remove('hidden')}
+  window.closeModal=function(id){document.getElementById(id).classList.add('hidden')};
+
+  function toast(msg,type=''){
+    const el=document.getElementById('toast');
+    el.className='toast'+(type?' '+type:'');
+    el.textContent=msg; el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>el.classList.remove('show'),4000);
   }
+  function setLoading(id,on,lbl){
+    const b=document.getElementById(id); if(!b)return;
+    b.classList.toggle('btn-loading',on);
+    b.innerHTML=on?`<span class="spinner"></span>${lbl}`:lbl;
+  }
+  function daysSince(ts){return ts?Math.floor((Date.now()-ts)/86400000):0}
+  function timeAgo(ts){
+    const s=Math.floor((Date.now()-ts)/1000);
+    if(s<60)return'just now';if(s<3600)return Math.floor(s/60)+'m ago';
+    if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';
+  }
+  function fmtDate(ts){return new Date(ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+  function genCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('')}
 
-  // ===================== STATE =====================
-  let currentUser = null;    // full user object from DB
-  let currentEmail = null;   // raw email string
-  let notifTimer = null;
-
-  // ===================== UTILS =====================
-  window.showScreen = function(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+  // ---- PAY TOGGLE ----
+  window.onPayChange=function(){
+    const v=document.getElementById('reg-pay-method').value;
+    ['esewa','khalti','paypal'].forEach(m=>document.getElementById('pay-detail-'+m).classList.toggle('hidden',v!==m));
   };
 
-  function openModal(id)  { document.getElementById(id).classList.remove('hidden'); }
-  window.closeModal = function(id) { document.getElementById(id).classList.add('hidden'); };
+  // ================================================================ AUTH
 
-  function notify(msg, type = '') {
-    const el = document.getElementById('notif');
-    el.className = 'notif' + (type ? ' ' + type : '');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(notifTimer);
-    notifTimer = setTimeout(() => el.classList.remove('show'), 4000);
-  }
-
-  function setLoading(btnId, loading, label) {
-    const btn = document.getElementById(btnId);
-    if (!btn) return;
-    btn.classList.toggle('btn-loading', loading);
-    btn.innerHTML = loading ? `<span class="spinner"></span>${label}` : label;
-  }
-
-  function daysSince(ts) {
-    if (!ts) return 0;
-    return Math.floor((Date.now() - ts) / 86400000);
-  }
-
-  function fmtDate(ts) {
-    return new Date(ts).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-  }
-
-  function generateCode() {
-    const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    return Array.from({length:6}, () => c[Math.floor(Math.random()*c.length)]).join('');
-  }
-
-  // ===================== PAYMENT FORM TOGGLE =====================
-  window.onPayChange = function() {
-    const v = document.getElementById('reg-pay-method').value;
-    ['esewa','khalti','paypal'].forEach(m =>
-      document.getElementById('pay-detail-' + m).classList.toggle('hidden', v !== m)
-    );
+  window.doRegister=async function(){
+    const name=document.getElementById('reg-name').value.trim();
+    const email=document.getElementById('reg-email').value.trim().toLowerCase();
+    const pass=document.getElementById('reg-pass').value;
+    const pm=document.getElementById('reg-pay-method').value;
+    if(!name)return toast('Please enter your name','error');
+    if(!email||!email.includes('@'))return toast('Please enter a valid email','error');
+    if(pass.length<6)return toast('Password must be at least 6 characters','error');
+    if(!pm)return toast('Please select a payment method — it is required','error');
+    let pid='';
+    if(pm==='esewa')pid=document.getElementById('reg-esewa').value.trim();
+    if(pm==='khalti')pid=document.getElementById('reg-khalti').value.trim();
+    if(pm==='paypal')pid=document.getElementById('reg-paypal').value.trim();
+    if(!pid)return toast('Please enter your '+pm+' ID / number','error');
+    setLoading('btn-register',true,'Creating account...');
+    try{
+      const ex=await fbGet(`users/${eKey(email)}`);
+      if(ex){setLoading('btn-register',false,'Create Account →');return toast('Email already registered. Sign in instead.','error');}
+      const u={name,email,passHash:btoa(pass),payMethod:pm,payId:pid,
+        streakStart:null,totalRelapses:0,relapseLog:[],
+        mode:null,challengeId:null,penalty:0,currency:'NPR',
+        totalDebt:0,paidDebt:0,notifications:[],createdAt:Date.now()};
+      await fbSet(`users/${eKey(email)}`,u);
+      localStorage.setItem('nv_session',email);
+      CE=email;CU=u;
+      setLoading('btn-register',false,'Create Account →');
+      showScreen('screen-main');openModal('modal-streak');
+    }catch(e){setLoading('btn-register',false,'Create Account →');toast('Error: '+e.message,'error');}
   };
 
-  // ===================== REGISTER =====================
-  window.doRegister = async function() {
-    const name = document.getElementById('reg-name').value.trim();
-    const email = document.getElementById('reg-email').value.trim().toLowerCase();
-    const pass = document.getElementById('reg-pass').value;
-    const payMethod = document.getElementById('reg-pay-method').value;
-
-    if (!name)       return notify('Please enter your name', 'error');
-    if (!email || !email.includes('@')) return notify('Please enter a valid email', 'error');
-    if (pass.length < 6) return notify('Password must be at least 6 characters', 'error');
-    if (!payMethod)  return notify('Please select a payment method — it is required', 'error');
-
-    let payId = '';
-    if (payMethod === 'esewa')  payId = document.getElementById('reg-esewa').value.trim();
-    if (payMethod === 'khalti') payId = document.getElementById('reg-khalti').value.trim();
-    if (payMethod === 'paypal') payId = document.getElementById('reg-paypal').value.trim();
-    if (!payId) return notify('Please enter your ' + payMethod + ' ID / number', 'error');
-
-    setLoading('btn-register', true, 'Creating account...');
-    try {
-      // Check if email already registered
-      const existing = await fbGet(`users/${eKey(email)}`);
-      if (existing) {
-        setLoading('btn-register', false, 'Create Account →');
-        return notify('Email already registered. Sign in instead.', 'error');
-      }
-
-      const user = {
-        name, email,
-        passHash: btoa(pass),
-        payMethod, payId,
-        streakStart: null,
-        totalRelapses: 0,
-        relapseLog: [],
-        mode: null,
-        challengeId: null,
-        penalty: 0,
-        currency: 'NPR',
-        totalDebt: 0,
-        paidDebt: 0,
-        createdAt: Date.now()
-      };
-
-      await fbSet(`users/${eKey(email)}`, user);
-
-      // Save session
-      localStorage.setItem('il_session', email);
-      currentEmail = email;
-      currentUser = user;
-
-      setLoading('btn-register', false, 'Create Account →');
-      showScreen('screen-main');
-      openModal('modal-streak');
-    } catch(e) {
-      setLoading('btn-register', false, 'Create Account →');
-      notify('Error: ' + e.message, 'error');
-    }
+  window.doLogin=async function(){
+    const email=document.getElementById('login-email').value.trim().toLowerCase();
+    const pass=document.getElementById('login-pass').value;
+    if(!email||!email.includes('@'))return toast('Enter a valid email','error');
+    if(!pass)return toast('Enter your password','error');
+    setLoading('btn-login',true,'Signing in...');
+    try{
+      const u=await fbGet(`users/${eKey(email)}`);
+      if(!u){setLoading('btn-login',false,'Sign In →');return toast('No account found.','error');}
+      if(u.passHash!==btoa(pass)){setLoading('btn-login',false,'Sign In →');return toast('Wrong password.','error');}
+      localStorage.setItem('nv_session',email);
+      CE=email;CU=u;
+      setLoading('btn-login',false,'Sign In →');
+      if(!u.streakStart){showScreen('screen-main');openModal('modal-streak');}
+      else loadApp();
+    }catch(e){setLoading('btn-login',false,'Sign In →');toast('Error: '+e.message,'error');}
   };
 
-  // ===================== LOGIN =====================
-  window.doLogin = async function() {
-    const email = document.getElementById('login-email').value.trim().toLowerCase();
-    const pass  = document.getElementById('login-pass').value;
-
-    if (!email || !email.includes('@')) return notify('Enter a valid email', 'error');
-    if (!pass) return notify('Enter your password', 'error');
-
-    setLoading('btn-login', true, 'Signing in...');
-    try {
-      const user = await fbGet(`users/${eKey(email)}`);
-      if (!user) {
-        setLoading('btn-login', false, 'Sign In →');
-        return notify('No account found with that email.', 'error');
-      }
-      if (user.passHash !== btoa(pass)) {
-        setLoading('btn-login', false, 'Sign In →');
-        return notify('Wrong password.', 'error');
-      }
-
-      localStorage.setItem('il_session', email);
-      currentEmail = email;
-      currentUser = user;
-      setLoading('btn-login', false, 'Sign In →');
-
-      if (!user.streakStart) {
-        showScreen('screen-main');
-        openModal('modal-streak');
-      } else {
-        loadMainApp();
-      }
-    } catch(e) {
-      setLoading('btn-login', false, 'Sign In →');
-      notify('Error: ' + e.message, 'error');
-    }
-  };
-
-  window.doLogout = function() {
-    localStorage.removeItem('il_session');
-    currentUser = null; currentEmail = null;
+  window.doLogout=function(){
+    clearInterval(pollTimer);
+    localStorage.removeItem('nv_session');
+    CU=null;CE=null;
     showScreen('screen-login');
   };
 
-  // ===================== STREAK INIT =====================
-  window.streakFromNow = async function() {
-    await fbPatch(`users/${eKey(currentEmail)}`, { streakStart: Date.now() });
-    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
-    closeModal('modal-streak');
-    loadMainApp();
+  // ================================================================ STREAK
+
+  window.streakFromNow=async function(){
+    await fbPatch(`users/${eKey(CE)}`,{streakStart:Date.now()});
+    CU=await fbGet(`users/${eKey(CE)}`);
+    closeModal('modal-streak');loadApp();
+  };
+  window.streakFromDays=async function(){
+    const d=parseInt(document.getElementById('streak-existing').value);
+    if(isNaN(d)||d<0)return toast('Enter a valid number','error');
+    const ts=Date.now()-d*86400000;
+    await fbPatch(`users/${eKey(CE)}`,{streakStart:ts});
+    CU=await fbGet(`users/${eKey(CE)}`);
+    closeModal('modal-streak');loadApp();
   };
 
-  window.streakFromDays = async function() {
-    const days = parseInt(document.getElementById('streak-existing').value);
-    if (isNaN(days) || days < 0) return notify('Enter a valid number', 'error');
-    const ts = Date.now() - days * 86400000;
-    await fbPatch(`users/${eKey(currentEmail)}`, { streakStart: ts });
-    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
-    closeModal('modal-streak');
-    loadMainApp();
-  };
+  // ================================================================ CORE
 
-  // ===================== MAIN APP =====================
-  function loadMainApp() {
-    showScreen('screen-main');
-    renderHome();
-    checkNotifications();
+  function loadApp(){showScreen('screen-main');renderHome();startPolling();}
+  async function syncUser(){CU=await fbGet(`users/${eKey(CE)}`);}
+
+  // Polling: check for new notifications every 12s
+  function startPolling(){
+    clearInterval(pollTimer);
+    pollTimer=setInterval(pollNotifs,12000);
+    pollNotifs();
   }
 
-  async function refreshUser() {
-    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
+  async function pollNotifs(){
+    try{
+      const notifs=await fbGet(`users/${eKey(CE)}/notifications`)||[];
+      const unread=notifs.filter(n=>!n.read).length;
+      const dot=document.getElementById('notif-dot');
+      if(dot)dot.classList.toggle('show',unread>0);
+      // Toast any notifications received in last 20s that haven't been toasted
+      const fresh=notifs.filter(n=>!n.read&&!n.toasted&&(Date.now()-n.time)<20000);
+      if(fresh.length>0){
+        toast('🔔 '+fresh[0].msg,'info');
+        const updated=notifs.map(n=>(!n.read&&!n.toasted&&(Date.now()-n.time)<20000)?{...n,toasted:true}:n);
+        await fbPatch(`users/${eKey(CE)}`,{notifications:updated});
+      }
+    }catch(_){}
   }
 
-  async function checkNotifications() {
-    await refreshUser();
-    const notifs = currentUser.notifications || [];
-    if (notifs.length > 0) {
-      const latest = notifs[notifs.length - 1];
-      notify('🔔 ' + latest.msg);
-      await fbPatch(`users/${eKey(currentEmail)}`, { notifications: [] });
-    }
-  }
+  // ================================================================ HOME
 
-  // ---- HOME ----
-  function renderHome() {
-    const days = daysSince(currentUser.streakStart);
-    const el = document.getElementById('streak-num');
-    el.textContent = days;
-    el.className = 'streak-number ' + (days >= 30 ? 'great' : days >= 7 ? 'ok' : 'low');
+  function renderHome(){
+    const days=daysSince(CU.streakStart);
+    const el=document.getElementById('streak-num');
+    el.textContent=days;
+    el.className='streak-number '+(days>=30?'great':days>=7?'ok':'low');
+    document.getElementById('home-name').textContent=CU.name;
 
-    document.getElementById('home-name').textContent = currentUser.name;
+    const mi=document.getElementById('mode-indicator');
+    if(CU.mode==='solo')
+      mi.innerHTML=`<span class="badge badge-yellow">Solo Pledge · ${CU.penalty} ${CU.currency}/relapse</span>`;
+    else if(CU.mode==='battle'&&CU.challengeId)
+      mi.innerHTML=`<span class="badge badge-red">⚔️ In battle · ${CU.challengeId}</span>`;
+    else
+      mi.innerHTML=`<span class="badge badge-blue">No mode active — go to Compete</span>`;
 
-    // Mode indicator
-    const mi = document.getElementById('mode-indicator');
-    if (currentUser.mode === 'solo') {
-      mi.innerHTML = `<span class="badge badge-yellow">Solo Pledge — ${currentUser.penalty} ${currentUser.currency}/relapse</span>`;
-    } else if (currentUser.mode === 'battle' && currentUser.challengeId) {
-      mi.innerHTML = `<span class="badge badge-red">⚔️ In battle · Code: ${currentUser.challengeId}</span>`;
-    } else {
-      mi.innerHTML = `<span class="badge badge-blue">No mode — set one in Compete tab</span>`;
-    }
-
-    // Debt
-    const debt = (currentUser.totalDebt || 0) - (currentUser.paidDebt || 0);
-    const dc = document.getElementById('home-debt-card');
-    if (debt > 0) {
+    const debt=(CU.totalDebt||0)-(CU.paidDebt||0);
+    const dc=document.getElementById('home-debt-card');
+    if(debt>0){
       dc.classList.remove('hidden');
-      document.getElementById('home-debt-amount').textContent = `${debt} ${currentUser.currency}`;
-      document.getElementById('home-debt-sub').textContent = `From ${currentUser.totalRelapses} relapse(s). Pay via your linked ${currentUser.payMethod}.`;
-    } else {
-      dc.classList.add('hidden');
-    }
+      document.getElementById('home-debt-amount').textContent=`${debt} ${CU.currency}`;
+      document.getElementById('home-debt-sub').textContent=`From ${CU.totalRelapses} relapse(s). Pay via ${CU.payMethod}.`;
+    }else dc.classList.add('hidden');
 
-    // Battle card
-    renderHomeBattleCard();
+    renderHomeBattle();
   }
 
-  async function renderHomeBattleCard() {
-    const bc = document.getElementById('home-battle-card');
-    if (!currentUser.challengeId) { bc.classList.add('hidden'); return; }
-
-    const ch = await fbGet(`challenges/${currentUser.challengeId}`);
-    if (!ch) { bc.classList.add('hidden'); return; }
-    bc.classList.remove('hidden');
-
-    const me = ch.players ? ch.players[eKey(currentEmail)] : null;
-    const allPlayers = ch.players ? Object.values(ch.players) : [];
-    const opp = allPlayers.find(p => p.email !== currentEmail);
-
-    const myDays = me ? daysSince(me.streakStart) : 0;
-    const oppDays = opp ? daysSince(opp.streakStart) : 0;
-    const myRel = me ? (me.relapses || 0) : 0;
-    const oppRel = opp ? (opp.relapses || 0) : 0;
-    const myDebt = myRel * ch.penalty;
-
-    document.getElementById('home-battle-body').innerHTML = `
-      <div class="grid2" style="margin-bottom:0.75rem">
-        <div class="stat-mini">
-          <div class="lbl">You</div>
-          <div class="val" style="color:var(--green)">${myDays}</div>
-          <div class="lbl">${myRel} relapses · ${myDebt} ${ch.currency} debt</div>
+  async function renderHomeBattle(){
+    const bc=document.getElementById('home-battle-card');
+    if(!CU.challengeId){bc.classList.add('hidden');return;}
+    try{
+      const ch=await fbGet(`challenges/${CU.challengeId}`);
+      if(!ch){bc.classList.add('hidden');return;}
+      bc.classList.remove('hidden');
+      const allP=ch.players?Object.values(ch.players):[];
+      const me=allP.find(p=>p.email===CE);
+      const opp=allP.find(p=>p.email!==CE);
+      const myD=daysSince(me?.streakStart);
+      const opD=daysSince(opp?.streakStart);
+      const myR=(me?.relapses||0),opR=(opp?.relapses||0);
+      document.getElementById('home-battle-body').innerHTML=`
+        <div class="grid2" style="margin-bottom:.75rem">
+          <div class="stat-mini">
+            <div class="lbl">You</div>
+            <div class="val" style="color:var(--green)">${myD}</div>
+            <div class="lbl">${myR} relapses · ${myR*ch.penalty} ${ch.currency}</div>
+          </div>
+          <div class="stat-mini">
+            <div class="lbl">${opp?opp.name:'Waiting...'}</div>
+            <div class="val" style="color:${opp&&opD<myD?'var(--accent)':'var(--green)'}">${opD}</div>
+            <div class="lbl">${opp?opR+' relapses · '+opR*ch.penalty+' '+ch.currency:'—'}</div>
+          </div>
         </div>
-        <div class="stat-mini">
-          <div class="lbl">${opp ? opp.name : 'Waiting...'}</div>
-          <div class="val" style="color:${opp && oppDays < myDays ? 'var(--accent)' : 'var(--green)'}">${oppDays}</div>
-          <div class="lbl">${opp ? oppRel + ' relapses' : 'Share code: ' + ch.id}</div>
-        </div>
-      </div>
-      ${myDebt > 0 ? `<div style="font-size:0.85rem; color:var(--accent); text-align:center">You owe ${opp ? opp.name : 'opponent'}: <strong>${myDebt} ${ch.currency}</strong></div>` : `<div style="font-size:0.85rem; color:var(--green); text-align:center">No debt ✅</div>`}
-    `;
+        ${myR*ch.penalty>0?`<div style="font-size:.85rem;color:var(--accent);text-align:center">You owe ${opp?opp.name:'opponent'}: <strong>${myR*ch.penalty} ${ch.currency}</strong></div>`:`<div style="font-size:.85rem;color:var(--green);text-align:center">No debt ✅</div>`}`;
+    }catch(_){bc.classList.add('hidden');}
   }
 
-  // ---- TAB ROUTING ----
-  window.goTab = function(tab) {
-    const tabs = ['home','compete','history','leaderboard','profile'];
-    tabs.forEach(t => {
-      document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab);
-      document.getElementById('nav-' + t).classList.toggle('active', t === tab);
+  // ================================================================ TABS
+
+  window.goTab=function(tab){
+    ['home','compete','notifs','leaderboard','profile'].forEach(t=>{
+      document.getElementById('tab-'+t).classList.toggle('hidden',t!==tab);
+      document.getElementById('nav-'+t).classList.toggle('active',t===tab);
     });
-    if (tab === 'compete')     renderCompete();
-    if (tab === 'history')     renderHistory();
-    if (tab === 'leaderboard') renderLeaderboard();
-    if (tab === 'profile')     renderProfile();
+    if(tab==='compete')renderCompete();
+    if(tab==='notifs')renderNotifs();
+    if(tab==='leaderboard')renderLeaderboard();
+    if(tab==='profile')renderProfile();
   };
 
-  // ---- RELAPSE ----
-  window.openRelapseModal = () => openModal('modal-relapse');
+  // ================================================================ RELAPSE
 
-  window.doRelapse = async function() {
+  window.openRelapseModal=()=>openModal('modal-relapse');
+
+  window.doRelapse=async function(){
     closeModal('modal-relapse');
-    await refreshUser();
+    await syncUser();
+    const now=Date.now();
+    const broken=daysSince(CU.streakStart);
+    const log=CU.relapseLog||[];
+    log.push({time:now,streakBroken:broken});
+    const upd={streakStart:now,totalRelapses:(CU.totalRelapses||0)+1,relapseLog:log};
 
-    const now = Date.now();
-    const streakBroken = daysSince(currentUser.streakStart);
-    const log = currentUser.relapseLog || [];
-    log.push({ time: now, streakBroken });
+    if(CU.mode==='solo') upd.totalDebt=(CU.totalDebt||0)+CU.penalty;
 
-    const updates = {
-      streakStart: now,
-      totalRelapses: (currentUser.totalRelapses || 0) + 1,
-      relapseLog: log
-    };
-
-    // Solo penalty
-    if (currentUser.mode === 'solo') {
-      updates.totalDebt = (currentUser.totalDebt || 0) + currentUser.penalty;
-    }
-
-    // Battle penalty + notify opponent
-    if (currentUser.mode === 'battle' && currentUser.challengeId) {
-      const ch = await fbGet(`challenges/${currentUser.challengeId}`);
-      if (ch && ch.players) {
-        // Update my player record in challenge
-        await fbPatch(`challenges/${currentUser.challengeId}/players/${eKey(currentEmail)}`, {
-          relapses: (ch.players[eKey(currentEmail)]?.relapses || 0) + 1,
-          streakStart: now
-        });
-        updates.totalDebt = (currentUser.totalDebt || 0) + ch.penalty;
-        updates.currency = ch.currency;
-
-        // Notify each opponent
-        for (const [key, p] of Object.entries(ch.players)) {
-          if (p.email !== currentEmail) {
-            const oppNotifs = (await fbGet(`users/${eKey(p.email)}/notifications`)) || [];
-            oppNotifs.push({
-              msg: `${currentUser.name} just relapsed! They owe you ${ch.penalty} ${ch.currency}.`,
-              time: now
+    if(CU.mode==='battle'&&CU.challengeId){
+      try{
+        const ch=await fbGet(`challenges/${CU.challengeId}`);
+        if(ch){
+          const mk=eKey(CE);
+          const myRec=(ch.players||{})[mk]||{};
+          await fbPatch(`challenges/${CU.challengeId}/players/${mk}`,{
+            relapses:(myRec.relapses||0)+1, streakStart:now
+          });
+          upd.totalDebt=(CU.totalDebt||0)+ch.penalty;
+          upd.currency=ch.currency;
+          // Notify every opponent
+          const opps=Object.values(ch.players||{}).filter(p=>p.email!==CE);
+          for(const opp of opps){
+            const on=(await fbGet(`users/${eKey(opp.email)}/notifications`))||[];
+            on.push({
+              id:Date.now()+'_'+Math.random().toString(36).slice(2),
+              msg:`${CU.name} just relapsed! Their streak was ${broken} days. They owe you ${ch.penalty} ${ch.currency}.`,
+              time:now,read:false,toasted:false,type:'relapse',from:CU.name,cid:CU.challengeId
             });
-            await fbPatch(`users/${eKey(p.email)}`, { notifications: oppNotifs });
+            await fbPatch(`users/${eKey(opp.email)}`,{notifications:on});
           }
         }
-      }
+      }catch(e){console.error(e);}
     }
 
-    await fbPatch(`users/${eKey(currentEmail)}`, updates);
-    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
+    await fbPatch(`users/${eKey(CE)}`,upd);
+    CU=await fbGet(`users/${eKey(CE)}`);
     renderHome();
-    notify(`Relapse logged. Streak reset. Keep going! 💪\nStreak was at ${streakBroken} days.`);
+    toast(`Relapse logged. Streak reset.\nWas at ${broken} days. Keep going! 💪`);
   };
 
-  // ---- COMPETE ----
-  window.pickMode = function(mode) {
-    document.getElementById('mc-solo').classList.toggle('selected', mode === 'solo');
-    document.getElementById('mc-battle').classList.toggle('selected', mode === 'battle');
-    document.getElementById('form-solo').classList.toggle('hidden', mode !== 'solo');
-    document.getElementById('form-battle').classList.toggle('hidden', mode !== 'battle');
+  // ================================================================ COMPETE
+
+  window.pickMode=function(m){
+    document.getElementById('mc-solo').classList.toggle('selected',m==='solo');
+    document.getElementById('mc-battle').classList.toggle('selected',m==='battle');
+    document.getElementById('form-solo').classList.toggle('hidden',m!=='solo');
+    document.getElementById('form-battle').classList.toggle('hidden',m!=='battle');
   };
 
-  window.startSolo = async function() {
-    const penalty = parseFloat(document.getElementById('solo-penalty').value);
-    const currency = document.getElementById('solo-currency').value;
-    if (!penalty || penalty <= 0) return notify('Enter a valid penalty amount', 'error');
-    await fbPatch(`users/${eKey(currentEmail)}`, { mode: 'solo', penalty, currency });
-    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
-    notify(`Solo pledge active! Each relapse = ${penalty} ${currency}`, 'success');
-    renderHome();
-    goTab('home');
+  window.startSolo=async function(){
+    const p=parseFloat(document.getElementById('solo-penalty').value);
+    const c=document.getElementById('solo-currency').value;
+    if(!p||p<=0)return toast('Enter a valid penalty amount','error');
+    await fbPatch(`users/${eKey(CE)}`,{mode:'solo',penalty:p,currency:c});
+    CU=await fbGet(`users/${eKey(CE)}`);
+    toast(`Solo pledge active! Each relapse = ${p} ${c}`,'success');
+    renderHome();goTab('home');
   };
 
-  window.createBattle = async function() {
-    const penalty = parseFloat(document.getElementById('battle-penalty').value);
-    const currency = document.getElementById('battle-currency').value;
-    if (!penalty || penalty <= 0) return notify('Enter a valid penalty amount', 'error');
-
-    await refreshUser();
-    const code = generateCode();
-    const challenge = {
-      id: code,
-      penalty,
-      currency,
-      createdAt: Date.now(),
-      players: {
-        [eKey(currentEmail)]: {
-          email: currentEmail,
-          name: currentUser.name,
-          streakStart: currentUser.streakStart || Date.now(),
-          relapses: 0
-        }
-      }
-    };
-
-    await fbSet(`challenges/${code}`, challenge);
-    await fbPatch(`users/${eKey(currentEmail)}`, { mode: 'battle', challengeId: code, penalty, currency });
-    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
-
-    document.getElementById('invite-code-val').textContent = code;
+  window.createBattle=async function(){
+    const p=parseFloat(document.getElementById('battle-penalty').value);
+    const c=document.getElementById('battle-currency').value;
+    if(!p||p<=0)return toast('Enter a valid penalty amount','error');
+    await syncUser();
+    const code=genCode();
+    await fbSet(`challenges/${code}`,{
+      id:code,penalty:p,currency:c,createdAt:Date.now(),
+      players:{[eKey(CE)]:{email:CE,name:CU.name,streakStart:CU.streakStart||Date.now(),relapses:0}}
+    });
+    await fbPatch(`users/${eKey(CE)}`,{mode:'battle',challengeId:code,penalty:p,currency:c});
+    CU=await fbGet(`users/${eKey(CE)}`);
+    document.getElementById('invite-code-val').textContent=code;
     openModal('modal-invite');
     renderCompete();
   };
 
-  window.joinBattle = async function() {
-    const code = document.getElementById('join-code').value.trim().toUpperCase();
-    if (code.length !== 6) return notify('Enter a valid 6-character code', 'error');
+  window.joinBattle=async function(){
+    const code=document.getElementById('join-code').value.trim().toUpperCase();
+    if(code.length!==6)return toast('Enter a valid 6-character code','error');
+    await syncUser();
+    const ch=await fbGet(`challenges/${code}`);
+    if(!ch)return toast('No battle found with that code','error');
+    if(ch.players&&ch.players[eKey(CE)])return toast("You're already in this battle",'error');
+    if(ch.players&&Object.keys(ch.players).length>=2)return toast('Battle is full (2 players max)','error');
 
-    await refreshUser();
-    const ch = await fbGet(`challenges/${code}`);
-    if (!ch) return notify('No battle found with that code', 'error');
-    if (ch.players && ch.players[eKey(currentEmail)]) return notify("You're already in this battle", 'error');
-    if (ch.players && Object.keys(ch.players).length >= 2) return notify('Battle is already full (2 players max)', 'error');
-
-    await fbPatch(`challenges/${code}/players`, {
-      [eKey(currentEmail)]: {
-        email: currentEmail,
-        name: currentUser.name,
-        streakStart: currentUser.streakStart || Date.now(),
-        relapses: 0
-      }
+    await fbPatch(`challenges/${code}/players`,{
+      [eKey(CE)]:{email:CE,name:CU.name,streakStart:CU.streakStart||Date.now(),relapses:0}
     });
 
-    await fbPatch(`users/${eKey(currentEmail)}`, {
-      mode: 'battle', challengeId: code,
-      penalty: ch.penalty, currency: ch.currency
-    });
-    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
+    // Notify existing players
+    for(const p of Object.values(ch.players||{})){
+      const pn=(await fbGet(`users/${eKey(p.email)}/notifications`))||[];
+      pn.push({
+        id:Date.now()+'_'+Math.random().toString(36).slice(2),
+        msg:`${CU.name} joined your battle! Game on ⚔️`,
+        time:Date.now(),read:false,toasted:false,type:'join',from:CU.name,cid:code
+      });
+      await fbPatch(`users/${eKey(p.email)}`,{notifications:pn});
+    }
 
-    notify('Joined! Battle is on ⚔️', 'success');
-    renderCompete();
-    goTab('home');
-    renderHome();
+    await fbPatch(`users/${eKey(CE)}`,{mode:'battle',challengeId:code,penalty:ch.penalty,currency:ch.currency});
+    CU=await fbGet(`users/${eKey(CE)}`);
+    toast('Joined! Battle is on ⚔️','success');
+    renderCompete();goTab('home');renderHome();
   };
 
-  async function renderCompete() {
-    await refreshUser();
-    const hasChallenge = currentUser.mode === 'battle' && currentUser.challengeId;
-    document.getElementById('compete-setup').classList.toggle('hidden', hasChallenge);
-    document.getElementById('compete-active').classList.toggle('hidden', !hasChallenge);
-
-    if (hasChallenge) {
-      const ch = await fbGet(`challenges/${currentUser.challengeId}`);
-      if (!ch) return;
-      const allP = ch.players ? Object.values(ch.players) : [];
-      const me = allP.find(p => p.email === currentEmail);
-      const opp = allP.find(p => p.email !== currentEmail);
-      const myDays = me ? daysSince(me.streakStart) : 0;
-      const oppDays = opp ? daysSince(opp.streakStart) : 0;
-      const myRel = me ? (me.relapses || 0) : 0;
-      const oppRel = opp ? (opp.relapses || 0) : 0;
-
-      document.getElementById('active-battle-body').innerHTML = `
-        <div style="font-size:0.75rem; color:var(--muted); margin-bottom:1rem">
-          Code: <span style="font-family:'Space Mono',monospace; color:var(--accent2)">${ch.id}</span> &nbsp;·&nbsp;
-          ${ch.penalty} ${ch.currency}/relapse
+  async function renderCompete(){
+    await syncUser();
+    const inB=CU.mode==='battle'&&CU.challengeId;
+    document.getElementById('compete-setup').classList.toggle('hidden',inB);
+    document.getElementById('compete-active').classList.toggle('hidden',!inB);
+    if(!inB)return;
+    try{
+      const ch=await fbGet(`challenges/${CU.challengeId}`);
+      if(!ch)return;
+      const allP=Object.values(ch.players||{});
+      const me=allP.find(p=>p.email===CE);
+      const opp=allP.find(p=>p.email!==CE);
+      const myD=daysSince(me?.streakStart),opD=daysSince(opp?.streakStart);
+      const myR=(me?.relapses||0),opR=(opp?.relapses||0);
+      document.getElementById('active-battle-body').innerHTML=`
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:1rem">
+          Code: <span style="font-family:'Space Mono',monospace;color:var(--accent2)">${ch.id}</span>
+          &nbsp;·&nbsp; ${ch.penalty} ${ch.currency}/relapse
         </div>
         <div class="grid2" style="margin-bottom:1rem">
           <div class="stat-mini">
             <div class="lbl">You</div>
-            <div class="val" style="color:var(--green)">${myDays}</div>
-            <div class="lbl">days</div>
-            <div style="margin-top:6px; font-size:0.75rem; color:var(--accent)">${myRel} relapse(s)</div>
-            <div style="font-size:0.75rem; color:var(--muted)">Debt: ${myRel * ch.penalty} ${ch.currency}</div>
+            <div class="val" style="color:var(--green)">${myD}</div>
+            <div class="lbl">${myR} relapses</div>
+            <div style="margin-top:5px;font-size:.72rem;color:${myR>0?'var(--accent)':'var(--green)'}">Debt: ${myR*ch.penalty} ${ch.currency}</div>
           </div>
           <div class="stat-mini">
-            <div class="lbl">${opp ? opp.name : 'Waiting...'}</div>
-            <div class="val" style="color:${opp && oppDays < myDays ? 'var(--accent)':'var(--green)'}">${oppDays}</div>
-            <div class="lbl">days</div>
-            ${opp ? `<div style="margin-top:6px; font-size:0.75rem; color:var(--accent)">${oppRel} relapse(s)</div>
-            <div style="font-size:0.75rem; color:var(--muted)">Debt: ${oppRel * ch.penalty} ${ch.currency}</div>` :
-            `<div style="font-size:0.75rem; color:var(--muted); margin-top:6px">Share code above</div>`}
+            <div class="lbl">${opp?opp.name:'Waiting...'}</div>
+            <div class="val" style="color:${opp&&opD<myD?'var(--accent)':'var(--green)'}">${opD}</div>
+            <div class="lbl">${opp?opR+' relapses':'—'}</div>
+            ${opp?`<div style="margin-top:5px;font-size:.72rem;color:${opR>0?'var(--accent)':'var(--green)'}">Debt: ${opR*ch.penalty} ${ch.currency}</div>`:''}
           </div>
         </div>
-        ${!opp ? `<div style="background:var(--surface2); border-radius:12px; padding:1rem; text-align:center">
-          <div style="font-size:0.7rem; color:var(--muted); margin-bottom:4px">Invite code</div>
-          <div class="code-display" style="font-size:1.5rem; letter-spacing:6px">${ch.id}</div>
-        </div>` : ''}
-      `;
-    }
+        ${!opp?`<div style="background:var(--surface2);border-radius:12px;padding:1rem;text-align:center">
+          <div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Share invite code</div>
+          <div class="code-display" style="font-size:1.4rem;letter-spacing:6px;margin:0">${ch.id}</div>
+        </div>`:''}`;
+    }catch(e){console.error(e);}
   }
 
-  window.leaveBattle = async function() {
-    if (!confirm('Leave this battle? Your debt record stays.')) return;
-    await refreshUser();
-    if (currentUser.challengeId) {
-      await fbDel(`challenges/${currentUser.challengeId}/players/${eKey(currentEmail)}`);
+  window.leaveBattle=async function(){
+    if(!confirm('Leave this battle? Your debt history stays on record.'))return;
+    await syncUser();
+    if(CU.challengeId){
+      await fbDel(`challenges/${CU.challengeId}/players/${eKey(CE)}`);
     }
-    await fbPatch(`users/${eKey(currentEmail)}`, { mode: null, challengeId: null });
-    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
-    renderCompete();
-    renderHome();
-    notify('Left the battle.');
+    await fbPatch(`users/${eKey(CE)}`,{mode:null,challengeId:null});
+    CU=await fbGet(`users/${eKey(CE)}`);
+    renderCompete();renderHome();
+    toast('Left the battle.');
   };
 
-  window.closeInviteModal = function() {
-    closeModal('modal-invite');
-    goTab('home');
-    renderHome();
-  };
+  window.closeInviteModal=function(){closeModal('modal-invite');goTab('home');renderHome();};
 
-  // ---- HISTORY ----
-  async function renderHistory() {
-    await refreshUser();
-    const log = (currentUser.relapseLog || []).slice().reverse();
-    const container = document.getElementById('history-content');
-    if (!log.length) {
-      container.innerHTML = '<div class="card text-center text-muted" style="padding:2rem">No relapses logged. Keep going! 💪</div>';
+  // ================================================================ NOTIFICATIONS
+
+  async function renderNotifs(){
+    await syncUser();
+    const notifs=(CU.notifications||[]).slice().reverse();
+    const container=document.getElementById('notifs-content');
+    if(!notifs.length){
+      container.innerHTML='<div class="card text-center text-muted" style="padding:2rem">No notifications yet.<br><span style="font-size:1.5rem;display:block;margin-top:.5rem">🔔</span></div>';
       return;
     }
-    container.innerHTML = `<div class="card">${log.map(r => `
-      <div class="hist-item">
-        <div>
-          <div style="font-weight:600; font-size:0.9rem">${fmtDate(r.time)}</div>
-          <div class="text-muted">${new Date(r.time).toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}</div>
-        </div>
-        <div style="text-align:right">
-          <div class="text-muted">Streak broken at</div>
-          <div style="font-family:'Space Mono',monospace; color:var(--accent); font-size:0.95rem">${r.streakBroken} days</div>
-        </div>
+    const typeIcons={relapse:'💀',join:'⚔️',payment:'💰'};
+    container.innerHTML=`
+      <div class="card">
+        ${notifs.map(n=>`
+          <div class="notif-item${n.read?'':' unread'}">
+            <div class="notif-msg">${typeIcons[n.type]||'📣'} ${n.msg}</div>
+            <div class="notif-time">${timeAgo(n.time)}</div>
+          </div>
+        `).join('')}
       </div>
-    `).join('')}</div>
-    <div style="text-align:center; padding-top:0.5rem" class="text-muted">${log.length} total relapse(s)</div>`;
+      <button class="btn btn-ghost" onclick="markAllRead()" style="margin-top:.5rem">Mark all as read</button>`;
+
+    // Mark all read in DB
+    const updated=(CU.notifications||[]).map(n=>({...n,read:true}));
+    await fbPatch(`users/${eKey(CE)}`,{notifications:updated});
+    document.getElementById('notif-dot').classList.remove('show');
   }
 
-  // ---- LEADERBOARD ----
-  async function renderLeaderboard() {
-    const challenges = await fbGet('challenges');
-    const lb = document.getElementById('lb-content');
-    if (!challenges) { lb.innerHTML = '<div class="text-muted text-center">No active battles yet.</div>'; return; }
+  window.markAllRead=async function(){
+    const updated=(CU.notifications||[]).map(n=>({...n,read:true}));
+    await fbPatch(`users/${eKey(CE)}`,{notifications:updated});
+    CU=await fbGet(`users/${eKey(CE)}`);
+    renderNotifs();
+  };
 
-    const rows = [];
-    for (const ch of Object.values(challenges)) {
-      if (!ch.players) continue;
-      for (const p of Object.values(ch.players)) {
-        rows.push({
-          name: p.name,
-          days: daysSince(p.streakStart),
-          relapses: p.relapses || 0,
-          currency: ch.currency,
-          penalty: ch.penalty
-        });
-      }
+  // ================================================================ LEADERBOARD
+  // Privacy: only shows active challenge the user is currently in.
+  // Once user leaves a group, that group never appears again for them.
+
+  async function renderLeaderboard(){
+    await syncUser();
+    const container=document.getElementById('lb-content');
+
+    if(CU.mode!=='battle'||!CU.challengeId){
+      container.innerHTML=`
+        <div class="card text-center" style="padding:2rem">
+          <div style="font-size:2rem;margin-bottom:.75rem">🏆</div>
+          <div style="font-weight:600;margin-bottom:.5rem">No active battles</div>
+          <div class="text-muted" style="line-height:1.6">
+            Join or create a battle to see your leaderboard.<br>
+            <span style="font-size:.75rem;margin-top:.5rem;display:block">
+              🔒 Leaderboards are private — only visible to current participants
+            </span>
+          </div>
+        </div>`;
+      return;
     }
-    rows.sort((a, b) => b.days - a.days);
 
-    if (!rows.length) { lb.innerHTML = '<div class="text-muted text-center">No participants yet.</div>'; return; }
+    try{
+      const ch=await fbGet(`challenges/${CU.challengeId}`);
+      if(!ch||!ch.players){
+        container.innerHTML='<div class="card text-muted text-center" style="padding:1.5rem">No battle data.</div>';
+        return;
+      }
+      const players=Object.values(ch.players);
+      const rows=players.map(p=>({
+        name:p.name,email:p.email,
+        days:daysSince(p.streakStart),
+        relapses:p.relapses||0,
+        debt:(p.relapses||0)*ch.penalty,
+        isMe:p.email===CE
+      })).sort((a,b)=>b.days-a.days);
 
-    const rankClass = ['gold','silver','bronze'];
-    const rankEmoji = ['🥇','🥈','🥉'];
-    lb.innerHTML = rows.map((r, i) => `
-      <div class="lb-row">
-        <div class="lb-rank ${rankClass[i] || ''}">${rankEmoji[i] || (i + 1)}</div>
-        <div class="lb-name">${r.name}</div>
-        <div class="lb-days">${r.days}d</div>
-        <div class="lb-fail">${r.relapses > 0 ? r.relapses + '❌' : '✅'}</div>
-      </div>
-    `).join('');
+      const re=['🥇','🥈','🥉'],rc=['gold','silver','bronze'];
+      container.innerHTML=`
+        <div style="margin-bottom:.75rem">
+          <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted)">Battle · ${ch.id}</div>
+          <div style="font-size:.8rem;color:var(--muted);margin-top:2px">${ch.penalty} ${ch.currency}/relapse · ${players.length} player(s)</div>
+        </div>
+        <div class="card">
+          ${rows.map((r,i)=>`
+            <div class="lb-row${r.isMe?' me':''}">
+              <div class="lb-rank ${rc[i]||''}">${re[i]||(i+1)}</div>
+              <div class="lb-name">${r.name}${r.isMe?'<span class="lb-you-tag">you</span>':''}</div>
+              <div class="lb-days">${r.days}d</div>
+              <div class="lb-fail">${r.relapses>0?r.relapses+'❌':'✅'}</div>
+            </div>
+          `).join('')}
+        </div>
+        ${rows.find(r=>r.isMe&&r.debt>0)?`
+          <div style="font-size:.82rem;color:var(--accent);text-align:center;margin-top:.5rem">
+            Your current debt: ${rows.find(r=>r.isMe).debt} ${ch.currency}
+          </div>`:''}
+        <div style="font-size:.67rem;color:var(--muted);text-align:center;margin-top:.75rem">
+          🔒 Private — only visible to battle participants
+        </div>`;
+    }catch(e){
+      container.innerHTML='<div class="card text-muted text-center">Error loading leaderboard.</div>';
+    }
   }
 
-  // ---- PROFILE ----
-  function renderProfile() {
-    const u = currentUser;
-    document.getElementById('profile-account').innerHTML = `
+  // ================================================================ PROFILE
+
+  function renderProfile(){
+    const u=CU;
+    document.getElementById('profile-account').innerHTML=`
       <div class="hist-item"><span class="text-muted">Name</span><strong>${u.name}</strong></div>
       <div class="hist-item"><span class="text-muted">Email</span><span>${u.email}</span></div>
-      <div class="hist-item"><span class="text-muted">Joined</span><span>${fmtDate(u.createdAt)}</span></div>
-    `;
-
-    const icons = {esewa:'eS', khalti:'Kh', paypal:'PP'};
-    const cls = {esewa:'pay-esewa', khalti:'pay-khalti', paypal:'pay-paypal'};
-    document.getElementById('profile-payment').innerHTML = `
+      <div class="hist-item"><span class="text-muted">Joined</span><span>${fmtDate(u.createdAt)}</span></div>`;
+    const ic={esewa:'eS',khalti:'Kh',paypal:'PP'},cl={esewa:'pay-esewa',khalti:'pay-khalti',paypal:'pay-paypal'};
+    document.getElementById('profile-payment').innerHTML=`
       <div class="pay-row">
-        <div class="pay-icon ${cls[u.payMethod] || ''}">${icons[u.payMethod] || '?'}</div>
+        <div class="pay-icon ${cl[u.payMethod]||''}">${ic[u.payMethod]||'?'}</div>
         <div>
-          <div style="font-weight:600; text-transform:capitalize">${u.payMethod || 'None set'}</div>
-          <div class="text-muted">${u.payId || '—'}</div>
+          <div style="font-weight:600;text-transform:capitalize">${u.payMethod||'None'}</div>
+          <div class="text-muted">${u.payId||'—'}</div>
         </div>
-      </div>
-    `;
-
-    const debt = (u.totalDebt || 0) - (u.paidDebt || 0);
-    document.getElementById('profile-stats').innerHTML = `
-      <div class="hist-item"><span class="text-muted">Current streak</span><span style="font-family:'Space Mono',monospace; color:var(--green)">${daysSince(u.streakStart)} days</span></div>
-      <div class="hist-item"><span class="text-muted">Total relapses</span><span style="font-family:'Space Mono',monospace; color:var(--accent)">${u.totalRelapses || 0}</span></div>
-      <div class="hist-item"><span class="text-muted">Total debt</span><span style="font-family:'Space Mono',monospace; color:var(--accent)">${u.totalDebt || 0} ${u.currency || ''}</span></div>
-      <div class="hist-item"><span class="text-muted">Outstanding</span><span style="font-family:'Space Mono',monospace; color:${debt > 0 ? 'var(--accent)' : 'var(--green)'}">${debt} ${u.currency || ''}</span></div>
-    `;
+      </div>`;
+    const debt=(u.totalDebt||0)-(u.paidDebt||0);
+    document.getElementById('profile-stats').innerHTML=`
+      <div class="hist-item"><span class="text-muted">Current streak</span><span style="font-family:'Space Mono',monospace;color:var(--green)">${daysSince(u.streakStart)} days</span></div>
+      <div class="hist-item"><span class="text-muted">Total relapses</span><span style="font-family:'Space Mono',monospace;color:var(--accent)">${u.totalRelapses||0}</span></div>
+      <div class="hist-item"><span class="text-muted">Total debt</span><span style="font-family:'Space Mono',monospace;color:var(--accent)">${u.totalDebt||0} ${u.currency||''}</span></div>
+      <div class="hist-item"><span class="text-muted">Outstanding</span><span style="font-family:'Space Mono',monospace;color:${debt>0?'var(--accent)':'var(--green)'}">${debt} ${u.currency||''}</span></div>`;
   }
 
-  // ---- PAYMENT MODAL ----
-  window.openPayModal = function() {
-    const u = currentUser;
-    const debt = (u.totalDebt || 0) - (u.paidDebt || 0);
-    const oppInfo = ''; // Could look up opponent details
-    document.getElementById('pay-modal-info').textContent = `You owe ${debt} ${u.currency}. Send via your linked ${u.payMethod} account.`;
+  // ================================================================ PAYMENT MODAL
+  // In-app guided flow: shows opponent's payment ID, step-by-step instructions,
+  // deep links into eSewa/Khalti/PayPal apps, and notifies opponent on confirm.
 
-    const icons = {esewa:'eS', khalti:'Kh', paypal:'PP'};
-    const cls = {esewa:'pay-esewa', khalti:'pay-khalti', paypal:'pay-paypal'};
-    const names = {esewa:'eSewa', khalti:'Khalti', paypal:'PayPal'};
+  window.openPayModal=async function(){
+    await syncUser();
+    const u=CU;
+    const debt=(u.totalDebt||0)-(u.paidDebt||0);
+    if(debt<=0)return toast('No outstanding debt!','success');
 
-    let body = `
-      <div style="background:var(--surface2); border-radius:12px; padding:1.25rem; margin-bottom:0.75rem">
-        <div class="pay-row">
-          <div class="pay-icon ${cls[u.payMethod] || ''}">${icons[u.payMethod] || '?'}</div>
-          <div>
-            <div style="font-weight:700; font-size:1rem">${names[u.payMethod] || u.payMethod}</div>
-            <div class="text-muted">Your ID: ${u.payId}</div>
-          </div>
-        </div>
-        <div style="font-size:0.85rem; color:var(--muted); margin:0.75rem 0">
-          Amount to send: <strong style="color:var(--text)">${debt} ${u.currency}</strong>
-        </div>
-    `;
-
-    if (u.payMethod === 'paypal') {
-      body += `<a href="https://www.paypal.com/myaccount/transfer/homepage/pay" target="_blank" style="display:block; margin-bottom:0.75rem">
-        <button class="btn btn-primary" style="background:#003087">Open PayPal →</button>
-      </a>`;
-    } else if (u.payMethod === 'esewa') {
-      body += `<div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.75rem">Open your eSewa app → Send Money → enter the amount above</div>`;
-    } else if (u.payMethod === 'khalti') {
-      body += `<div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.75rem">Open your Khalti app → Send Money → enter the amount above</div>`;
+    // Fetch opponent payment details for P2P transfers
+    let opp=null;
+    if(u.mode==='battle'&&u.challengeId){
+      try{
+        const ch=await fbGet(`challenges/${u.challengeId}`);
+        if(ch&&ch.players){
+          const op=Object.values(ch.players).find(p=>p.email!==CE);
+          if(op){
+            const ou=await fbGet(`users/${eKey(op.email)}`);
+            if(ou)opp={name:ou.name,method:ou.payMethod,id:ou.payId};
+          }
+        }
+      }catch(_){}
     }
 
-    body += `<button class="btn btn-green" onclick="markPaid()">✓ I've sent the payment</button></div>`;
-    document.getElementById('pay-modal-body').innerHTML = body;
+    const recip=opp?opp.name:'the developer';
+    document.getElementById('pay-modal-info').textContent=
+      `You owe ${debt} ${u.currency}. `+(opp?`Send to ${opp.name} via their linked payment.`:`Send via your ${u.payMethod}.`);
+
+    const method=opp?.method||u.payMethod;
+    const pid=opp?.id||null;
+
+    let body='';
+
+    if(method==='esewa'){
+      body=`
+        <div style="background:var(--surface2);border-radius:12px;padding:1.25rem;margin-bottom:.75rem;border:1px solid rgba(61,139,47,.2)">
+          <div class="pay-row"><div class="pay-icon pay-esewa">eS</div><strong style="font-size:1rem">eSewa Transfer</strong></div>
+          ${pid?`<div class="pay-step">
+            Send to eSewa number: <strong style="color:#60bb46">${pid}</strong><br>
+            Recipient: <strong>${recip}</strong> &nbsp;·&nbsp; Amount: <strong>${debt} ${u.currency}</strong>
+          </div>`:''}
+          <div class="pay-step">
+            <strong>Steps:</strong><br>
+            1. Open your eSewa app below<br>
+            2. Tap <strong>Send Money</strong><br>
+            3. Enter: <strong>${pid||'recipient number'}</strong><br>
+            4. Amount: <strong>${debt} ${u.currency}</strong><br>
+            5. Add note: <em>Novyr penalty</em><br>
+            6. Confirm &amp; send
+          </div>
+          <a href="esewa://" style="display:block;margin-bottom:.5rem"><button class="btn btn-esewa">📱 Open eSewa App →</button></a>
+          <button class="btn btn-green" onclick="markPaid()">✓ I've sent via eSewa</button>
+        </div>`;
+    } else if(method==='khalti'){
+      body=`
+        <div style="background:var(--surface2);border-radius:12px;padding:1.25rem;margin-bottom:.75rem;border:1px solid rgba(92,45,145,.25)">
+          <div class="pay-row"><div class="pay-icon pay-khalti">Kh</div><strong style="font-size:1rem">Khalti Transfer</strong></div>
+          ${pid?`<div class="pay-step">
+            Send to Khalti number: <strong style="color:#a855f7">${pid}</strong><br>
+            Recipient: <strong>${recip}</strong> &nbsp;·&nbsp; Amount: <strong>${debt} ${u.currency}</strong>
+          </div>`:''}
+          <div class="pay-step">
+            <strong>Steps:</strong><br>
+            1. Open your Khalti app below<br>
+            2. Tap <strong>Send Money</strong><br>
+            3. Enter: <strong>${pid||'recipient number'}</strong><br>
+            4. Amount: <strong>${debt} ${u.currency}</strong><br>
+            5. Add note: <em>Novyr penalty</em><br>
+            6. Confirm &amp; send
+          </div>
+          <a href="khalti://" style="display:block;margin-bottom:.5rem"><button class="btn btn-khalti">📱 Open Khalti App →</button></a>
+          <button class="btn btn-green" onclick="markPaid()">✓ I've sent via Khalti</button>
+        </div>`;
+    } else if(method==='paypal'){
+      const ppUrl=pid
+        ?`https://www.paypal.com/paypalme/${pid.split('@')[0]}/${debt}`
+        :'https://www.paypal.com/myaccount/transfer/homepage/pay';
+      body=`
+        <div style="background:var(--surface2);border-radius:12px;padding:1.25rem;margin-bottom:.75rem;border:1px solid rgba(0,48,135,.25)">
+          <div class="pay-row"><div class="pay-icon pay-paypal">PP</div><strong style="font-size:1rem">PayPal Transfer</strong></div>
+          ${pid?`<div class="pay-step">
+            Send to PayPal: <strong style="color:#4da6ff">${pid}</strong><br>
+            Recipient: <strong>${recip}</strong> &nbsp;·&nbsp; Amount: <strong>${debt} ${u.currency}</strong>
+          </div>`:''}
+          <a href="${ppUrl}" target="_blank" style="display:block;margin-bottom:.5rem">
+            <button class="btn btn-paypal">🌐 Open PayPal →</button>
+          </a>
+          <button class="btn btn-green" onclick="markPaid()">✓ I've sent via PayPal</button>
+        </div>`;
+    } else {
+      body=`<div style="background:var(--surface2);border-radius:12px;padding:1.25rem;margin-bottom:.75rem">
+        <div class="pay-step">Send <strong>${debt} ${u.currency}</strong> to ${recip} via your agreed method.</div>
+        <button class="btn btn-green" onclick="markPaid()">✓ Payment sent</button>
+      </div>`;
+    }
+
+    if((u.paidDebt||0)>0)
+      body+=`<div style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:.5rem">Previously paid: ${u.paidDebt} ${u.currency}</div>`;
+
+    document.getElementById('pay-modal-body').innerHTML=body;
     openModal('modal-pay');
   };
 
-  window.markPaid = async function() {
-    await refreshUser();
-    const debt = (currentUser.totalDebt || 0) - (currentUser.paidDebt || 0);
-    await fbPatch(`users/${eKey(currentEmail)}`, { paidDebt: currentUser.totalDebt });
-    currentUser = await fbGet(`users/${eKey(currentEmail)}`);
+  window.markPaid=async function(){
+    await syncUser();
+    const debt=(CU.totalDebt||0)-(CU.paidDebt||0);
+    await fbPatch(`users/${eKey(CE)}`,{paidDebt:CU.totalDebt});
+
+    // Notify opponent
+    if(CU.mode==='battle'&&CU.challengeId){
+      try{
+        const ch=await fbGet(`challenges/${CU.challengeId}`);
+        if(ch&&ch.players){
+          const opps=Object.values(ch.players).filter(p=>p.email!==CE);
+          for(const op of opps){
+            const on=(await fbGet(`users/${eKey(op.email)}/notifications`))||[];
+            on.push({
+              id:Date.now()+'_'+Math.random().toString(36).slice(2),
+              msg:`${CU.name} marked ${debt} ${CU.currency} as paid to you. Please confirm you received it.`,
+              time:Date.now(),read:false,toasted:false,type:'payment',from:CU.name,cid:CU.challengeId
+            });
+            await fbPatch(`users/${eKey(op.email)}`,{notifications:on});
+          }
+        }
+      }catch(_){}
+    }
+
+    CU=await fbGet(`users/${eKey(CE)}`);
     closeModal('modal-pay');
     renderHome();
-    notify(`Payment of ${debt} ${currentUser.currency} marked as sent ✅`, 'success');
+    toast(`${debt} ${CU.currency} marked as paid ✅\nOpponent notified.`,'success');
   };
 
-  // ===================== INIT =====================
-  async function init() {
-    const saved = localStorage.getItem('il_session');
-    if (saved) {
-      try {
-        const user = await fbGet(`users/${eKey(saved)}`);
-        if (user) {
-          currentEmail = saved;
-          currentUser = user;
-          if (!user.streakStart) {
-            showScreen('screen-main');
-            openModal('modal-streak');
-          } else {
-            loadMainApp();
-          }
+  // ================================================================ INIT
+
+  async function init(){
+    const saved=localStorage.getItem('nv_session');
+    if(saved){
+      try{
+        const u=await fbGet(`users/${eKey(saved)}`);
+        if(u){
+          CE=saved;CU=u;
+          if(!u.streakStart){showScreen('screen-main');openModal('modal-streak');}
+          else loadApp();
           return;
         }
-      } catch(e) {
-        console.warn('Session load failed:', e);
-      }
+      }catch(e){console.warn('Session load:',e);}
     }
     showScreen('screen-register');
   }
